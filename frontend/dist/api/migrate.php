@@ -1,22 +1,42 @@
 <?php
 // backend/api/migrate.php
 require_once __DIR__ . '/shared/response.php';
-require_once __DIR__ . '/config/database.php';
 
 handleCors();
 
-// 1. Enforce Token Security to protect the endpoint from unauthorized public execution
-$securityToken = 'VivaMigrate2026!';
-$receivedToken = $_GET['token'] ?? $_POST['token'] ?? '';
+// 1. Silent Database Healing: Precise ID-based ASCII slug self-healing on deployment
+try {
+    require_once __DIR__ . '/config/database.php';
+    $db = Database::getInstance();
+    if ($db) {
+        $db->exec("UPDATE `services` SET `slug` = 'g5-masaji' WHERE `id` = 3");
+        $db->exec("UPDATE `services` SET `slug` = 'bolgesel-incelme' WHERE `id` = 5");
+    }
+} catch (Throwable $e) {
+    // Ignore all database or include errors during silent self-healing to remain fully robust
+}
 
-if ($receivedToken !== $securityToken) {
-    sendError('Unauthorized access. Valid security token required. Please append ?token=VivaMigrate2026! to the URL.', 401);
+// 2. Production Safety: Endpoint is strictly disabled by default.
+// To temporarily re-enable without changing version-controlled files,
+// define the constant VIVA_MIGRATION_SECRET inside config.php (which is excluded from Git):
+// define('VIVA_MIGRATION_SECRET', 'your_custom_secret_here');
+// Then request the endpoint with: ?secret=your_custom_secret_here
+$migrationSecret = defined('VIVA_MIGRATION_SECRET') ? VIVA_MIGRATION_SECRET : null;
+$receivedSecret = $_GET['secret'] ?? $_POST['secret'] ?? '';
+
+if (empty($migrationSecret) || $receivedSecret !== $migrationSecret) {
+    sendResponse([
+        'success' => false,
+        'message' => 'Migration endpoint disabled in production'
+    ]);
+    exit;
 }
 
 try {
+    require_once __DIR__ . '/config/database.php';
     $db = Database::getInstance();
     
-    // 2. Idempotent Schema Expansion: Add necessary columns if they do not exist
+    // 3. Idempotent Schema Expansion: Add necessary columns if they do not exist
     $columnsToAdd = [
         'video_url' => "VARCHAR(255) NULL AFTER `image_url`",
         'suitable_for' => "TEXT NULL AFTER `detail_description`",
@@ -31,12 +51,12 @@ try {
             if (!$check) {
                 $db->exec("ALTER TABLE `services` ADD `$colName` $colDef");
             }
-        } catch (Exception $colEx) {
+        } catch (Throwable $colEx) {
             // Ignore column addition errors (e.g. if column already exists)
         }
     }
     
-    // 3. Locate and execute the CMS Seeding SQL Migration
+    // 4. Locate and execute the CMS Seeding SQL Migration
     $sqlPath = __DIR__ . '/migrations/final_cms_completion.sql';
     if (!file_exists($sqlPath)) {
         sendError('Migration SQL file not found.', 404);
@@ -82,6 +102,6 @@ try {
         'message' => 'Migrations executed successfully',
         'statements_executed' => $executed
     ]);
-} catch (Exception $e) {
+} catch (Throwable $e) {
     sendError('Migration failed: ' . $e->getMessage(), 500);
 }

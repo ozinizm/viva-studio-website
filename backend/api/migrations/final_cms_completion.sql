@@ -43,7 +43,7 @@ VALUES
 (
   3,
   'G5 Masajı',
-  'g5-masajı',
+  'g5-masaji',
   'Titreşimli masaj ile bölgesel incelme ve pürüzsüz cilt.',
   'Özel G5 masaj cihazı ile uygulanan titreşim ve ritmik vuruşlar sayesinde selülit görünümünü hafifletin, ödem atımını hızlandırın ve cildinizi sıkılaştırın.',
   'Bölgesel İncelme',
@@ -113,6 +113,7 @@ VALUES
   1
 )
 ON DUPLICATE KEY UPDATE
+  slug = VALUES(slug),
   title = VALUES(title),
   short_description = VALUES(short_description),
   detail_description = VALUES(detail_description),
