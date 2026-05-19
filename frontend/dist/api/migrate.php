@@ -4,19 +4,7 @@ require_once __DIR__ . '/shared/response.php';
 
 handleCors();
 
-// 1. Silent Database Healing: Precise ID-based ASCII slug self-healing on deployment
-try {
-    require_once __DIR__ . '/config/database.php';
-    $db = Database::getInstance();
-    if ($db) {
-        $db->exec("UPDATE `services` SET `slug` = 'g5-masaji' WHERE `id` = 3");
-        $db->exec("UPDATE `services` SET `slug` = 'bolgesel-incelme' WHERE `id` = 5");
-    }
-} catch (Throwable $e) {
-    // Ignore all database or include errors during silent self-healing to remain fully robust
-}
-
-// 2. Production Safety: Endpoint is strictly disabled by default.
+// 1. Production Safety: Endpoint is strictly disabled by default.
 // To temporarily re-enable without changing version-controlled files,
 // define the constant VIVA_MIGRATION_SECRET inside config.php (which is excluded from Git):
 // define('VIVA_MIGRATION_SECRET', 'your_custom_secret_here');
@@ -36,7 +24,13 @@ try {
     require_once __DIR__ . '/config/database.php';
     $db = Database::getInstance();
     
-    // 3. Idempotent Schema Expansion: Add necessary columns if they do not exist
+    // Silent database self-healing is strictly restricted to authorized admin/secret context only
+    if ($db) {
+        $db->exec("UPDATE `services` SET `slug` = 'g5-masaji' WHERE `id` = 3");
+        $db->exec("UPDATE `services` SET `slug` = 'bolgesel-incelme' WHERE `id` = 5");
+    }
+    
+    // 2. Idempotent Schema Expansion: Add necessary columns if they do not exist
     $columnsToAdd = [
         'video_url' => "VARCHAR(255) NULL AFTER `image_url`",
         'suitable_for' => "TEXT NULL AFTER `detail_description`",
@@ -56,7 +50,7 @@ try {
         }
     }
     
-    // 4. Locate and execute the CMS Seeding SQL Migration
+    // 3. Locate and execute the CMS Seeding SQL Migration
     $sqlPath = __DIR__ . '/migrations/final_cms_completion.sql';
     if (!file_exists($sqlPath)) {
         sendError('Migration SQL file not found.', 404);
