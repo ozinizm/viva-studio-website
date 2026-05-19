@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cream text-charcoal font-sans antialiased selection:bg-sage selection:text-warm-white;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif text-charcoal;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-warm-white/80 backdrop-blur-md border border-warm-white/20 shadow-soft;
+  }
+}

@@ -1,0 +1,13 @@
+# Admin Panel Modules
+- **Login:** Giriş ekranı.
+- **Dashboard:** Özet istatistikler ve son bildirimler.
+- **Hero Yönetimi:** Ana sayfa başlık ve görsel/video.
+- **Hizmet Yönetimi:** Servis ekleme, düzenleme, listeleme.
+- **Galeri Yönetimi:** Görsel yükleme ve kategorizasyon.
+- **Blog Yönetimi:** Makale içerikleri.
+- **Rezervasyon Talepleri:** Gelen taleplerin durum (Yeni, Arandı, İptal) yönetimi.
+- **Kampanya Yönetimi:** Promosyon ve duyurular.
+- **SSS Yönetimi:** Sıkça sorulan sorular.
+- **Müşteri Yorumları:** Ana sayfada gösterilecek müşteri geri bildirimleri.
+- **SEO Ayarları:** Sayfa bazlı title, description ayarları.
+- **Site Ayarları:** İletişim, adres ve sosyal medya bilgileri.
