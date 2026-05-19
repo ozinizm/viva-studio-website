@@ -17,7 +17,8 @@ import NotFoundPage from './pages/public/NotFoundPage';
 // Admin Pages
 import DashboardPage from './pages/admin/DashboardPage';
 import ReservationsPage from './pages/admin/ReservationsPage';
-import GenericCrudPage from './pages/admin/GenericCrudPage';
+import ServicesAdminPage from './pages/admin/ServicesAdminPage';
+import BlogAdminPage from './pages/admin/BlogAdminPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import GalleryAdminPage from './pages/admin/GalleryAdminPage';
 import LoginPage from './pages/admin/LoginPage';
@@ -51,9 +52,9 @@ function App() {
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="reservations" element={<ReservationsPage />} />
-            <Route path="services" element={<GenericCrudPage title="Hizmet Yönetimi" endpoint="services" />} />
+            <Route path="services" element={<ServicesAdminPage />} />
             <Route path="gallery" element={<GalleryAdminPage />} />
-            <Route path="blog" element={<GenericCrudPage title="Blog Yönetimi" endpoint="blog" />} />
+            <Route path="blog" element={<BlogAdminPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
           </Route>

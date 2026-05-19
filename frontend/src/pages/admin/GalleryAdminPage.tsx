@@ -102,14 +102,27 @@ export default function GalleryAdminPage() {
                         
                         <form onSubmit={handleUpload} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium mb-1">Görsel Seç</label>
-                                <input type="file" name="image" accept="image/*" ref={fileInputRef} className="w-full text-sm" />
+                                <label className="block text-sm font-medium mb-1">Medya Tipi</label>
+                                <select name="media_type" className="w-full px-3 py-2 border rounded-xl" onChange={(e) => {
+                                    // Just to force re-render or handle state if needed, but simple uncontrolled form works
+                                }}>
+                                    <option value="image">Görsel (Image)</option>
+                                    <option value="video">Video (MP4/WebM)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Dosya Yükle (Görsel veya Video)</label>
+                                <input type="file" name="image" accept="image/*,video/mp4,video/webm" ref={fileInputRef} className="w-full text-sm" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Video URL (Dosya yerine dış link)</label>
+                                <input type="text" name="video_url" className="w-full px-3 py-2 border rounded-xl" placeholder="https://youtube.com/..." />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Başlık (Opsiyonel)</label>
                                 <input type="text" name="title" className="w-full px-3 py-2 border rounded-xl" />
                             </div>
-                            <div className="flex justify-end space-x-3 pt-4 border-t">
+                            <div className="flex justify-end space-x-3 pt-4 border-t mt-4">
                                 <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-charcoal hover:bg-black/5 rounded-xl">İptal</button>
                                 <button type="submit" disabled={uploading} className="px-4 py-2 bg-sage text-white rounded-xl hover:bg-sage-dark disabled:opacity-50">
                                     {uploading ? 'Yükleniyor...' : 'Yükle'}
