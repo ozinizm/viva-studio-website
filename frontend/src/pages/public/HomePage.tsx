@@ -1,10 +1,19 @@
 
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../../components/common/SEO';
-import { services, testimonials } from '../../data/mockData';
+import { testimonials } from '../../data/mockData';
 import { getWhatsAppUrl, trackWhatsAppClick } from '../../services/trackingService';
+import { apiClient } from '../../services/apiClient';
 
 const HomePage = () => {
+  const [apiServices, setApiServices] = useState<any[]>([]);
+
+  useEffect(() => {
+    apiClient.get('/services/list.php')
+      .then(res => setApiServices(res || []))
+      .catch(console.error);
+  }, []);
   return (
     <>
       <SEO />
@@ -51,14 +60,14 @@ const HomePage = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {services.map(service => (
+            {apiServices.slice(0, 4).map(service => (
               <div key={service.id} className="bg-warm-white rounded-[24px] overflow-hidden shadow-soft border border-border-soft transition-transform hover:-translate-y-1">
                 <div className="h-48 overflow-hidden">
-                  <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover" />
+                  <img src={service.image_url || 'https://via.placeholder.com/400x300'} alt={service.title} className="w-full h-full object-cover" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-sage-dark mb-2">{service.title}</h3>
-                  <p className="text-charcoal/70 mb-6 text-sm">{service.shortDescription}</p>
+                  <p className="text-charcoal/70 mb-6 text-sm">{service.short_description || service.shortDescription}</p>
                   <Link to={`/hizmetler/${service.slug}`} className="text-sage font-medium hover:text-sage-dark inline-flex items-center">
                     Detaylı Bilgi
                     <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
