@@ -1,9 +1,18 @@
 
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
+import SEO from '../components/common/SEO';
 
 const AdminLayout = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('viva_admin_auth');
+    navigate('/admin/login', { replace: true });
+  };
+
   return (
     <div className="flex h-screen bg-cream">
+      <SEO title="Viva Studio | Yönetim Paneli" noIndex={true} />
       {/* Sidebar */}
       <aside className="w-64 bg-warm-white border-r border-border-soft flex flex-col">
         <div className="p-6 border-b border-border-soft">
@@ -18,7 +27,7 @@ const AdminLayout = () => {
           <Link to="/admin/settings" className="block px-4 py-3 rounded-xl text-charcoal hover:bg-sage-light hover:text-sage-dark transition-colors font-medium">Ayarlar</Link>
         </nav>
         <div className="p-4 border-t border-border-soft">
-          <button className="w-full text-left px-4 py-3 rounded-xl text-danger hover:bg-danger/10 transition-colors font-medium">Çıkış Yap</button>
+          <button onClick={handleLogout} className="w-full text-left px-4 py-3 rounded-xl text-danger hover:bg-danger/10 transition-colors font-medium">Çıkış Yap</button>
         </div>
       </aside>
 

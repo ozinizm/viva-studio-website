@@ -18,6 +18,8 @@ import NotFoundPage from './pages/public/NotFoundPage';
 import DashboardPage from './pages/admin/DashboardPage';
 import ReservationsPage from './pages/admin/ReservationsPage';
 import PlaceholderAdminPage from './pages/admin/PlaceholderAdminPage';
+import LoginPage from './pages/admin/LoginPage';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
 function App() {
   return (
@@ -38,15 +40,20 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Route>
 
-        {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Navigate to="/admin/dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="reservations" element={<ReservationsPage />} />
-          <Route path="services" element={<PlaceholderAdminPage title="Hizmet Yönetimi" />} />
-          <Route path="gallery" element={<PlaceholderAdminPage title="Galeri Yönetimi" />} />
-          <Route path="blog" element={<PlaceholderAdminPage title="Blog Yönetimi" />} />
-          <Route path="settings" element={<PlaceholderAdminPage title="Site Ayarları" />} />
+        {/* Admin Login */}
+        <Route path="/admin/login" element={<LoginPage />} />
+
+        {/* Admin Routes (Protected) */}
+        <Route path="/admin" element={<ProtectedRoute />}>
+          <Route element={<AdminLayout />}>
+            <Route index element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="reservations" element={<ReservationsPage />} />
+            <Route path="services" element={<PlaceholderAdminPage title="Hizmet Yönetimi" />} />
+            <Route path="gallery" element={<PlaceholderAdminPage title="Galeri Yönetimi" />} />
+            <Route path="blog" element={<PlaceholderAdminPage title="Blog Yönetimi" />} />
+            <Route path="settings" element={<PlaceholderAdminPage title="Site Ayarları" />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
