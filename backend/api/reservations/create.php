@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../../shared/response.php';
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../shared/response.php';
+require_once __DIR__ . '/../config/database.php';
 handleCors();
 $data = json_decode(file_get_contents('php://input'));
 if(!isset($data->full_name) || !isset($data->phone)) sendError('Name and phone required');

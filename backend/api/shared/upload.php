@@ -18,7 +18,7 @@ function handleUpload($file, $targetDir, $allowedTypes = ['image/jpeg', 'image/p
 
     // Target dir based on doc root to be safe
     // Since api is inside vivastudiopilates.com/api, uploads will be in vivastudiopilates.com/uploads
-    $baseDir = __DIR__ . '/../../uploads/' . $targetDir;
+    $baseDir = __DIR__ . '/../uploads/' . $targetDir;
     
     if (!is_dir($baseDir)) {
         mkdir($baseDir, 0755, true);

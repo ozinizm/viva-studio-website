@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/../../shared/response.php';
-require_once __DIR__ . '/../../shared/auth.php';
-require_once __DIR__ . '/../../shared/upload.php';
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../shared/response.php';
+require_once __DIR__ . '/../shared/auth.php';
+require_once __DIR__ . '/../shared/upload.php';
+require_once __DIR__ . '/../config/database.php';
 handleCors();
 verifyToken();
 if(!isset($_FILES['image'])) sendError('No image uploaded');

@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../../shared/response.php';
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../shared/response.php';
+require_once __DIR__ . '/../config/database.php';
 handleCors();
 try {
     $db = Database::getInstance();

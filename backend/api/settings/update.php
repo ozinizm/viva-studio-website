@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../../shared/response.php';
-require_once __DIR__ . '/../../shared/auth.php';
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../shared/response.php';
+require_once __DIR__ . '/../shared/auth.php';
+require_once __DIR__ . '/../config/database.php';
 handleCors();
 verifyToken();
 $data = json_decode(file_get_contents('php://input'), true);
