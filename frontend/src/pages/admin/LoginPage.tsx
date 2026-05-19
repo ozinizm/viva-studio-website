@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../../components/common/SEO';
+
+const API_BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost/api';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -19,13 +22,13 @@ const LoginPage = () => {
     }
   }, [navigate]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     
     try {
       // First try real API
-      const response = await fetch('/api/auth/login.php', {
+      const response = await fetch(`${API_BASE_URL}/auth/login.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
