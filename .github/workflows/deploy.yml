@@ -1,0 +1,41 @@
+name: Deploy to cPanel via FTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        working-directory: ./frontend
+        run: npm ci || npm install
+
+      - name: Build Project
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Sync FTP Deployment
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.CPANEL_FTP_SERVER }}
+          username: ${{ secrets.CPANEL_FTP_USERNAME }}
+          password: ${{ secrets.CPANEL_FTP_PASSWORD }}
+          server-dir: ${{ secrets.CPANEL_FTP_TARGET_DIR }}
+          local-dir: ./frontend/dist/
+          danger-action: sync
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**

@@ -21,12 +21,14 @@ npm run dev
 - `npm run build`: Production için `dist` klasörünü oluşturur.
 - `npm run preview`: Build edilmiş projeyi yerel olarak görüntüler.
 
-## Deployment (cPanel)
-Bu proje, GitHub üzerinden cPanel'e otomatik deploy edilmek üzere yapılandırılmıştır:
-- Localde geliştirme tamamlandıktan sonra `npm run build` komutu çalıştırılarak `frontend/dist` klasörü güncellenmelidir.
-- `frontend/dist` klasörü **MUTLAKA** git'e commitlenmelidir.
-- Reponun kök dizininde bulunan `.cpanel.yml` dosyası, GitHub'dan pull işlemi yapıldığında otomatik olarak `dist` içindeki dosyaları `/home/fikircre/vivastudiopilates.com/` klasörüne kopyalar.
-- Sunucuda `npm install` veya `npm run build` çalıştırılmaz, build her zaman geliştirici tarafından local ortamda alınmalıdır.
+## Deployment (GitHub Actions FTP)
+Bu proje, GitHub Actions kullanılarak cPanel sunucusuna **otomatik** olarak deploy edilmektedir:
+- `main` branch'ine yapılan her push işleminde GitHub Actions tetiklenir.
+- İşlem sırasında proje otomatik olarak derlenir (`npm run build`).
+- Başarılı bir derleme sonucunda, yalnızca `frontend/dist` klasörü içindeki dosyalar FTP üzerinden canlı sunucuya (`/home/fikircre/vivastudiopilates.com`) aktarılır.
+- Kaynak kodlar, `.env` dosyaları ve diğer gereksiz klasörler (`node_modules` vs.) canlı sunucuya gönderilmez.
+- `CPANEL_FTP_SERVER`, `CPANEL_FTP_USERNAME`, `CPANEL_FTP_PASSWORD` ve `CPANEL_FTP_TARGET_DIR` gibi ayarlar GitHub Secrets üzerinden güvenle yönetilir.
+- Eski `.cpanel.yml` dosyası yapılandırma geçmişi için repoda tutulmaktadır ancak ana deployment akışı GitHub Actions üzerinden sağlanmaktadır.
 
 ## Dokümantasyon
 Projenin kapsamlı dökümanları `docs/` klasörü altındadır. Geliştirmeye başlamadan önce okunmalıdır.
