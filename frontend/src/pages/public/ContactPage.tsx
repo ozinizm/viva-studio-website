@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import SEO from '../../components/common/SEO';
 import { companyInfo, services as mockServices } from '../../data/mockData';
 import { getWhatsAppUrl, trackWhatsAppClick, trackReservationFormSubmit } from '../../services/trackingService';
 
 const ContactPage = () => {
+  const { settings } = useOutletContext<{ settings: any }>() || { settings: {} };
   const [activeServices, setActiveServices] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     name: '',
@@ -67,24 +69,29 @@ const ContactPage = () => {
     });
   };
 
+  const address = settings.address || companyInfo.address;
+  const phone = settings.phone || companyInfo.phone;
+  const hours = settings.working_hours || companyInfo.hours;
+  const mapsUrl = settings.google_maps_url || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3016.920536480074!2d29.2796129!3d40.8187212!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cadc1e6fbfa417%3A0xe54d24177b9492e4!2sPostane%2C%20Nazan%20Sk.%2C%2034940%20Tuzla%2F%C4%B0stanbul!5e0!3m2!1str!2str!4v1716100000000!5m2!1str!2str";
+
   return (
     <>
       <SEO title="İletişim & Rezervasyon | Viva Studio" description="Tuzla Viva Studio ile iletişime geçin. Reformer pilates ve diğer hizmetlerimiz için randevu talebi oluşturun." />
       
       <div className="bg-sage-light py-16 border-b border-border-soft">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-sage-dark mb-4">İletişim & Rezervasyon</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-sage-dark mb-4 font-serif">İletişim & Rezervasyon</h1>
           <p className="text-lg text-charcoal/80 max-w-2xl mx-auto">Sorularınız veya randevu talepleriniz için bizimle iletişime geçin.</p>
         </div>
       </div>
 
       <div className="py-20">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-16 max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row gap-16 max-w-6xl mx-auto mb-16">
             
             {/* Contact Info */}
             <div className="w-full lg:w-1/3">
-              <h2 className="text-2xl font-bold text-sage-dark mb-8">İletişim Bilgileri</h2>
+              <h2 className="text-2xl font-bold text-sage-dark mb-8 font-serif">İletişim Bilgileri</h2>
               
               <div className="space-y-6">
                 <div className="bg-warm-white p-6 rounded-2xl shadow-soft border border-border-soft flex items-start">
@@ -92,8 +99,8 @@ const ContactPage = () => {
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                   </div>
                   <div>
-                    <h4 className="font-bold text-charcoal mb-1">Adres</h4>
-                    <p className="text-charcoal/70 text-sm">{companyInfo.address}</p>
+                    <h4 className="font-bold text-charcoal mb-1 font-serif">Adres</h4>
+                    <p className="text-charcoal/70 text-sm">{address}</p>
                   </div>
                 </div>
 
@@ -102,9 +109,9 @@ const ContactPage = () => {
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                   </div>
                   <div>
-                    <h4 className="font-bold text-charcoal mb-1">Telefon / WhatsApp</h4>
-                    <a href={getWhatsAppUrl()} onClick={() => trackWhatsAppClick('contact_page')} target="_blank" rel="noreferrer" className="text-sage font-medium hover:underline block mb-1">{companyInfo.phone}</a>
-                    <a href={`tel:${companyInfo.phone.replace(/\s+/g, '')}`} className="text-charcoal/70 text-sm hover:text-sage transition-colors">Hemen Ara</a>
+                    <h4 className="font-bold text-charcoal mb-1 font-serif">Telefon / WhatsApp</h4>
+                    <a href={getWhatsAppUrl(`Merhaba, bilgi almak ve randevu oluşturmak istiyorum.`)} onClick={() => trackWhatsAppClick('contact_page')} target="_blank" rel="noreferrer" className="text-sage font-medium hover:underline block mb-1">{phone}</a>
+                    <a href={`tel:${phone.replace(/\s+/g, '')}`} className="text-charcoal/70 text-sm hover:text-sage transition-colors font-medium">Hemen Ara</a>
                   </div>
                 </div>
 
@@ -113,8 +120,8 @@ const ContactPage = () => {
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                   </div>
                   <div>
-                    <h4 className="font-bold text-charcoal mb-1">Çalışma Saatleri</h4>
-                    <p className="text-charcoal/70 text-sm">{companyInfo.hours}</p>
+                    <h4 className="font-bold text-charcoal mb-1 font-serif">Çalışma Saatleri</h4>
+                    <p className="text-charcoal/70 text-sm">{hours}</p>
                   </div>
                 </div>
               </div>
@@ -123,7 +130,7 @@ const ContactPage = () => {
             {/* Form */}
             <div className="w-full lg:w-2/3">
               <div className="bg-warm-white p-8 md:p-10 rounded-[32px] shadow-soft border border-border-soft">
-                <h2 className="text-2xl font-bold text-sage-dark mb-6">Randevu Talebi Oluştur</h2>
+                <h2 className="text-2xl font-bold text-sage-dark mb-6 font-serif">Randevu Talebi Oluştur</h2>
                 
                 {submitted ? (
                   <div className="bg-sage-light text-sage-dark p-6 rounded-2xl text-center">
@@ -217,6 +224,17 @@ const ContactPage = () => {
 
           </div>
         </div>
+      </div>
+
+      {/* Google Maps Section */}
+      <div className="w-full h-[450px] border-t border-border-soft">
+        <iframe 
+          title="Viva Studio Konum"
+          src={mapsUrl}
+          className="w-full h-full border-none filter grayscale opacity-90 hover:grayscale-0 transition-all duration-300"
+          allowFullScreen={true}
+          loading="lazy"
+        ></iframe>
       </div>
     </>
   );
