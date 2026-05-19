@@ -1,17 +1,11 @@
--- backend/database/migration_final_cms_completion.sql
+-- backend/api/migrations/final_cms_completion.sql
 -- Idempotent Final Production CMS Seeding and Table Structures
 
--- 1. Ensure services table columns exist
-ALTER TABLE `services` ADD COLUMN IF NOT EXISTS `video_url` VARCHAR(255) NULL AFTER `image_url`;
-ALTER TABLE `services` ADD COLUMN IF NOT EXISTS `suitable_for` TEXT NULL AFTER `detail_description`;
-ALTER TABLE `services` ADD COLUMN IF NOT EXISTS `benefits` TEXT NULL AFTER `suitable_for`;
-ALTER TABLE `services` ADD COLUMN IF NOT EXISTS `process` TEXT NULL AFTER `benefits`;
-ALTER TABLE `services` ADD COLUMN IF NOT EXISTS `faq` TEXT NULL AFTER `process`;
-
--- 2. Seed example Viva Studio services (or update them)
-INSERT INTO `services` (title, slug, short_description, detail_description, category, image_url, video_url, suitable_for, benefits, process, faq, sort_order, seo_title, seo_description, is_active)
+-- 1. Seed example Viva Studio services (or update them)
+INSERT INTO `services` (id, title, slug, short_description, detail_description, category, image_url, video_url, suitable_for, benefits, process, faq, sort_order, seo_title, seo_description, is_active)
 VALUES
 (
+  1,
   'Reformer Pilates',
   'reformer-pilates',
   'Vücudunuzu esnetin, güçlendirin ve duruşunuzu düzeltin.',
@@ -29,6 +23,7 @@ VALUES
   1
 ),
 (
+  2,
   'EMS Antrenmanı',
   'ems-antrenmani',
   '20 dakikada 3 saatlik spor etkisi yaratın.',
@@ -46,6 +41,7 @@ VALUES
   1
 ),
 (
+  3,
   'G5 Masajı',
   'g5-masajı',
   'Titreşimli masaj ile bölgesel incelme ve pürüzsüz cilt.',
@@ -63,6 +59,7 @@ VALUES
   1
 ),
 (
+  4,
   'Vacu Active',
   'vacu-active',
   'Vakum teknolojisi ile bölgesel incelme ve kalori yakımı.',
@@ -80,6 +77,7 @@ VALUES
   1
 ),
 (
+  5,
   'Bölgesel İncelme',
   'bolgesel-incelme',
   'Hedeflenen bölgelerde etkili yağ yakımı ve şekillenme.',
@@ -89,7 +87,7 @@ VALUES
   '',
   'Diyet ve spora rağmen bölgesel yağlanmadan kurtulamayanlar.',
   'Noktasal yağ yakımı, Gözle görülür incelme, Sıkı ve şekilli hatlar',
-  'Kişisel vücut analizinden sonra G5, Vacu Active ve beslenme yönlendirmeleri ile kişiye özel bir incelme kürü programlanır.',
+  'Kişisel vücut analizinden sonra G5, Vacu Active and beslenme yönlendirmeleri ile kişiye özel bir incelme kürü programlanır.',
   'Ağrılı bir işlem midir?:Hayır, ağrısız ve konforlu teknolojik uygulamalar kullanılır.',
   5,
   'Profesyonel Bölgesel İncelme Kürleri | Viva Studio',
@@ -97,6 +95,7 @@ VALUES
   1
 ),
 (
+  6,
   'Mat Pilates',
   'mat-pilates',
   'Vücut ağırlığıyla denge, esneklik ve zihin-beden uyumu.',
