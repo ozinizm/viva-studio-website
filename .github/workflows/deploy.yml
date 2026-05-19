@@ -42,3 +42,7 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            api/config/config.php
+            **/api/config/config.php
+            uploads/**
+            **/uploads/**

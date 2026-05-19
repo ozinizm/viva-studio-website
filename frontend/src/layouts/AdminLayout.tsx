@@ -6,7 +6,7 @@ const AdminLayout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('viva_admin_auth');
+    localStorage.removeItem('viva_admin_token');
     navigate('/admin/login', { replace: true });
   };
 

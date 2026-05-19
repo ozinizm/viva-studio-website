@@ -3,14 +3,18 @@ import { apiClient } from '../../services/apiClient';
 
 const ReservationsPage = () => {
   const [data, setData] = useState<any[]>([]);
+  const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const loadData = () => {
     setLoading(true);
-    apiClient.get('/reservations/list.php')
-      .then(res => setData(res || []))
-      .catch(() => setData([]))
-      .finally(() => setLoading(false));
+    Promise.all([
+      apiClient.get('/reservations/list.php').catch(() => []),
+      apiClient.get('/services/list.php').catch(() => [])
+    ]).then(([resList, servList]) => {
+      setData(Array.isArray(resList) ? resList : (resList?.data || []));
+      setServices(Array.isArray(servList) ? servList : (servList?.data || []));
+    }).finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -52,7 +56,7 @@ const ReservationsPage = () => {
               <tr className="border-b border-border-soft text-charcoal/70 text-sm bg-warm-white">
                 <th className="py-4 px-6 font-medium">Ad Soyad</th>
                 <th className="py-4 px-6 font-medium">İletişim</th>
-                <th className="py-4 px-6 font-medium">Hizmet ID</th>
+                <th className="py-4 px-6 font-medium">Hizmet</th>
                 <th className="py-4 px-6 font-medium">Mesaj</th>
                 <th className="py-4 px-6 font-medium">Durum</th>
                 <th className="py-4 px-6 font-medium text-right">İşlemler</th>
@@ -63,13 +67,15 @@ const ReservationsPage = () => {
                 <tr key={res.id} className="border-b border-border-soft last:border-0 hover:bg-cream/30 transition-colors">
                   <td className="py-4 px-6 text-charcoal font-medium whitespace-nowrap">{res.full_name}</td>
                   <td className="py-4 px-6 text-charcoal/80 whitespace-nowrap">{res.phone}</td>
-                  <td className="py-4 px-6 text-charcoal/80 whitespace-nowrap">{res.service_id || '-'}</td>
+                  <td className="py-4 px-6 text-charcoal/80 whitespace-nowrap">
+                    {services.find((s: any) => String(s.id) === String(res.service_id))?.title || 'Genel İletişim / Rezervasyon'}
+                  </td>
                   <td className="py-4 px-6 text-charcoal/60 text-sm max-w-[200px] truncate" title={res.message}>{res.message || '-'}</td>
                   <td className="py-4 px-6 whitespace-nowrap">
                     <select 
                       value={res.status}
                       onChange={(e) => updateStatus(res.id, e.target.value)}
-                      className={`text-xs font-medium px-2 py-1 rounded-full outline-none border-0 cursor-pointer ${
+                      className={`text-xs font-medium px-2 py-1 rounded-full outline-none border border-border-soft cursor-pointer bg-white ${
                         res.status === 'Yeni' ? 'bg-danger/10 text-danger' : 
                         res.status === 'Arandı' ? 'bg-warning/10 text-warning' : 
                         res.status === 'İptal' ? 'bg-charcoal/10 text-charcoal' :

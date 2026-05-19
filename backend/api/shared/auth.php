@@ -26,8 +26,17 @@ function generateToken($userId, $email, $role) {
 }
 
 function verifyToken() {
-    $headers = apache_request_headers();
-    $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : '';
+    $authHeader = '';
+    $headers = function_exists('apache_request_headers') ? apache_request_headers() : [];
+    if (isset($headers['Authorization'])) {
+        $authHeader = $headers['Authorization'];
+    } elseif (isset($headers['authorization'])) {
+        $authHeader = $headers['authorization'];
+    } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+    } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+        $authHeader = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+    }
 
     if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
         sendError('Unauthorized - No token provided', 401);

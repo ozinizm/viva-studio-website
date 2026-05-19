@@ -9,8 +9,12 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // If already authenticated, redirect to dashboard
-    if (localStorage.getItem('viva_admin_auth') === 'true') {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('expired') === 'true') {
+      setError('Oturum süresi doldu, lütfen tekrar giriş yapın.');
+    }
+
+    if (localStorage.getItem('viva_admin_token')) {
       navigate('/admin/dashboard', { replace: true });
     }
   }, [navigate]);
@@ -29,8 +33,7 @@ const LoginPage = () => {
       
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('viva_admin_auth_token', data.token);
-        localStorage.setItem('viva_admin_auth', 'true');
+        localStorage.setItem('viva_admin_token', data.token);
         navigate('/admin/dashboard', { replace: true });
         return;
       }
@@ -40,7 +43,7 @@ const LoginPage = () => {
 
     // Mock Auth Fallback (Since backend might not be deployed yet)
     if (email === 'admin@vivastudio.com' && password === 'VivaAdmin2026!') {
-      localStorage.setItem('viva_admin_auth', 'true');
+      localStorage.setItem('viva_admin_token', 'mock_token');
       navigate('/admin/dashboard', { replace: true });
     } else {
       setError('Geçersiz e-posta veya şifre.');

@@ -1,25 +1,70 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import SEO from '../../components/common/SEO';
-import { companyInfo, services } from '../../data/mockData';
+import { companyInfo, services as mockServices } from '../../data/mockData';
 import { getWhatsAppUrl, trackWhatsAppClick, trackReservationFormSubmit } from '../../services/trackingService';
 
 const ContactPage = () => {
+  const [activeServices, setActiveServices] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    service: '',
+    service_id: '',
     message: '',
     kvkk: false
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/services/list.php')
+      .then(res => res.json())
+      .then(data => {
+        const rawList = Array.isArray(data) ? data : (data?.data || []);
+        const active = rawList.filter((s: any) => String(s.is_active) === '1' || s.is_active === true);
+        if (active.length > 0) {
+          setActiveServices(active);
+        } else {
+          setActiveServices(mockServices);
+        }
+      })
+      .catch(() => {
+        setActiveServices(mockServices);
+      });
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Frontend validation is required by HTML5 attributes anyway.
     trackReservationFormSubmit();
-    setSubmitted(true);
-    // In future, call the API here.
+    setSubmitting(true);
+
+    fetch('/api/reservations/create.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        full_name: formData.name,
+        phone: formData.phone,
+        service_id: formData.service_id ? parseInt(formData.service_id) : null,
+        message: formData.message,
+        source_page: 'İletişim Sayfası'
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        setSubmitted(true);
+        setFormData({ name: '', phone: '', service_id: '', message: '', kvkk: false });
+      } else {
+        alert('Hata: ' + (data.message || 'Talep iletilemedi.'));
+      }
+    })
+    .catch(err => {
+      alert('İletişim Hatası: ' + err.message);
+    })
+    .finally(() => {
+      setSubmitting(false);
+    });
   };
 
   return (
@@ -119,13 +164,13 @@ const ContactPage = () => {
                       <select 
                         id="service" 
                         required
-                        value={formData.service}
-                        onChange={(e) => setFormData({...formData, service: e.target.value})}
+                        value={formData.service_id}
+                        onChange={(e) => setFormData({...formData, service_id: e.target.value})}
                         className="w-full px-4 py-3 rounded-xl border border-border-soft bg-cream focus:bg-warm-white focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage transition-colors"
                       >
                         <option value="">Lütfen seçin</option>
-                        {services.map(s => <option key={s.id} value={s.title}>{s.title}</option>)}
-                        <option value="Diğer/Genel Bilgi">Diğer / Genel Bilgi</option>
+                        {activeServices.map(s => <option key={s.id} value={s.id}>{s.title}</option>)}
+                        <option value="0">Diğer / Genel Bilgi</option>
                       </select>
                     </div>
 
@@ -160,9 +205,10 @@ const ContactPage = () => {
 
                     <button 
                       type="submit" 
-                      className="w-full bg-sage text-warm-white py-4 rounded-xl hover:bg-sage-dark transition-all font-bold text-lg shadow-soft"
+                      disabled={submitting}
+                      className="w-full bg-sage text-warm-white py-4 rounded-xl hover:bg-sage-dark transition-all font-bold text-lg shadow-soft disabled:opacity-50"
                     >
-                      Randevu Talebi Gönder
+                      {submitting ? 'Gönderiliyor...' : 'Randevu Talebi Gönder'}
                     </button>
                   </form>
                 )}

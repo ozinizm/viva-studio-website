@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
 const ProtectedRoute = () => {
-  const isAuthenticated = localStorage.getItem('viva_admin_auth') === 'true';
+  const isAuthenticated = !!localStorage.getItem('viva_admin_token');
 
   if (!isAuthenticated) {
     return <Navigate to="/admin/login" replace />;

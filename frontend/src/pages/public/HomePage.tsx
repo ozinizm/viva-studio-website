@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../../components/common/SEO';
-import { testimonials } from '../../data/mockData';
+import { testimonials, services as mockServices } from '../../data/mockData';
 import { getWhatsAppUrl, trackWhatsAppClick } from '../../services/trackingService';
 import { apiClient } from '../../services/apiClient';
 
@@ -11,8 +11,31 @@ const HomePage = () => {
 
   useEffect(() => {
     apiClient.get('/services/list.php')
-      .then(res => setApiServices(res || []))
-      .catch(console.error);
+      .then(res => {
+        const rawList = Array.isArray(res) ? res : (res?.data || []);
+        const active = rawList.filter((s: any) => String(s.is_active) === '1' || s.is_active === true);
+        if (active.length > 0) {
+          active.sort((a: any, b: any) => (parseInt(a.sort_order) || 0) - (parseInt(b.sort_order) || 0));
+          setApiServices(active);
+        } else {
+          setApiServices(mockServices.map((m: any) => ({
+            id: m.id,
+            title: m.title,
+            slug: m.slug,
+            short_description: m.shortDescription,
+            image_url: m.imageUrl
+          })));
+        }
+      })
+      .catch(() => {
+        setApiServices(mockServices.map((m: any) => ({
+          id: m.id,
+          title: m.title,
+          slug: m.slug,
+          short_description: m.shortDescription,
+          image_url: m.imageUrl
+        })));
+      });
   }, []);
   return (
     <>

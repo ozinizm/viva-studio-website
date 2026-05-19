@@ -1,10 +1,43 @@
-
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../../components/common/SEO';
-import { services } from '../../data/mockData';
+import { services as mockServices } from '../../data/mockData';
 import { getWhatsAppUrl, trackWhatsAppClick } from '../../services/trackingService';
 
 const ServicesPage = () => {
+  const [services, setServices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/services/list.php')
+      .then(res => res.json())
+      .then(data => {
+        const rawList = Array.isArray(data) ? data : (data?.data || []);
+        const active = rawList.filter((s: any) => String(s.is_active) === '1' || s.is_active === true);
+        if (active.length > 0) {
+          // Sort by sort_order
+          active.sort((a: any, b: any) => (parseInt(a.sort_order) || 0) - (parseInt(b.sort_order) || 0));
+          const mapped = active.map((s: any) => ({
+            id: s.id,
+            title: s.title,
+            slug: s.slug,
+            description: s.short_description || s.detail_description || '',
+            imageUrl: s.image_url || 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=1200',
+            benefits: s.benefits 
+              ? s.benefits.split(/[,\n]/).map((b: string) => b.trim()).filter(Boolean) 
+              : ['Profesyonel Eğitmenler', 'Kişiye Özel Programlar', 'Temiz ve Ferah Stüdyo']
+          }));
+          setServices(mapped);
+        } else {
+          setServices(mockServices);
+        }
+      })
+      .catch(() => {
+        setServices(mockServices);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <>
       <SEO title="Hizmetlerimiz | Viva Studio Tuzla" description="Reformer pilates, EMS antrenmanı, Vacu Active ve G5 selülit masajı hizmetlerimizle sağlıklı yaşam hedeflerinize ulaşın." />
@@ -18,47 +51,51 @@ const ServicesPage = () => {
 
       <div className="py-20">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="space-y-20">
-            {services.map((service, index) => (
-              <div key={service.id} className={`flex flex-col lg:flex-row items-center gap-12 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
-                <div className="w-full lg:w-1/2">
-                  <div className="rounded-[32px] overflow-hidden shadow-soft aspect-[4/3]">
-                    <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover" />
+          {loading ? (
+            <div className="text-center py-10 text-charcoal/60">Yükleniyor...</div>
+          ) : (
+            <div className="space-y-20">
+              {services.map((service, index) => (
+                <div key={service.id} className={`flex flex-col lg:flex-row items-center gap-12 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+                  <div className="w-full lg:w-1/2">
+                    <div className="rounded-[32px] overflow-hidden shadow-soft aspect-[4/3]">
+                      <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover" />
+                    </div>
                   </div>
-                </div>
-                <div className="w-full lg:w-1/2">
-                  <h2 className="text-3xl font-bold text-sage-dark mb-4">{service.title}</h2>
-                  <p className="text-lg text-charcoal/80 mb-8">{service.description}</p>
-                  
-                  <div className="mb-8">
-                    <h4 className="font-bold mb-4 text-charcoal">Neden Tercih Etmelisiniz?</h4>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {service.benefits.map((benefit, i) => (
-                        <li key={i} className="flex items-center text-charcoal/80">
-                          <svg className="w-5 h-5 text-sage mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                          {benefit}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <div className="w-full lg:w-1/2">
+                    <h2 className="text-3xl font-bold text-sage-dark mb-4">{service.title}</h2>
+                    <p className="text-lg text-charcoal/80 mb-8">{service.description}</p>
+                    
+                    <div className="mb-8">
+                      <h4 className="font-bold mb-4 text-charcoal">Neden Tercih Etmelisiniz?</h4>
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {service.benefits.map((benefit: string, i: number) => (
+                          <li key={i} className="flex items-center text-charcoal/80">
+                            <svg className="w-5 h-5 text-sage mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                            {benefit}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
 
-                  <div className="flex flex-wrap gap-4">
-                    <Link to={`/hizmetler/${service.slug}`} className="bg-warm-white border border-border-soft text-charcoal px-6 py-3 rounded-xl hover:bg-sage-light hover:border-sage transition-all font-medium">
-                      Detaylı Bilgi
-                    </Link>
-                    <a 
-                      href={getWhatsAppUrl(`Merhaba, ${service.title} hakkında detaylı bilgi almak ve randevu oluşturmak istiyorum.`)}
-                      target="_blank" rel="noreferrer"
-                      onClick={() => trackWhatsAppClick('service_list_cta')}
-                      className="bg-sage text-warm-white px-6 py-3 rounded-xl hover:bg-sage-dark transition-all font-medium inline-flex items-center"
-                    >
-                      WhatsApp'tan Randevu Al
-                    </a>
+                    <div className="flex flex-wrap gap-4">
+                      <Link to={`/hizmetler/${service.slug}`} className="bg-warm-white border border-border-soft text-charcoal px-6 py-3 rounded-xl hover:bg-sage-light hover:border-sage transition-all font-medium">
+                        Detaylı Bilgi
+                      </Link>
+                      <a 
+                        href={getWhatsAppUrl(`Merhaba, ${service.title} hakkında detaylı bilgi almak ve randevu oluşturmak istiyorum.`)}
+                        target="_blank" rel="noreferrer"
+                        onClick={() => trackWhatsAppClick('service_list_cta')}
+                        className="bg-sage text-warm-white px-6 py-3 rounded-xl hover:bg-sage-dark transition-all font-medium inline-flex items-center"
+                      >
+                        WhatsApp'tan Randevu Al
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>
