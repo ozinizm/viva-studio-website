@@ -15,10 +15,30 @@ const LoginPage = () => {
     }
   }, [navigate]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     
-    // Mock Auth Check
+    try {
+      // First try real API
+      const response = await fetch('/api/auth/login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('viva_admin_auth_token', data.token);
+        localStorage.setItem('viva_admin_auth', 'true');
+        navigate('/admin/dashboard', { replace: true });
+        return;
+      }
+    } catch (err) {
+      console.warn('Real API failed, falling back to mock auth', err);
+    }
+
+    // Mock Auth Fallback (Since backend might not be deployed yet)
     if (email === 'admin@vivastudio.com' && password === 'VivaAdmin2026!') {
       localStorage.setItem('viva_admin_auth', 'true');
       navigate('/admin/dashboard', { replace: true });

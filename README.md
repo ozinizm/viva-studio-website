@@ -4,8 +4,9 @@ Tuzla bölgesindeki lider wellness, reformer pilates ve bölgesel incelme stüdy
 
 ## Teknik Stack
 - Frontend: React, Vite, TypeScript, Tailwind CSS
-- State Management / Data: Mock Data Service Layer (İleride API'ye bağlanacak)
-- Güvenlik: Frontend-only geçici Mock Auth (Gerçek production admin güvenliği için backend JWT auth gerekir)
+- Backend: PHP (REST API)
+- Database: MySQL / MariaDB (cPanel)
+- Güvenlik: PHP JWT Auth / API Token Authentication
 - Routing: React Router
 - Dağıtım: cPanel (GitHub Deployment)
 

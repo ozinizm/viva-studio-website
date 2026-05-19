@@ -17,7 +17,7 @@ import NotFoundPage from './pages/public/NotFoundPage';
 // Admin Pages
 import DashboardPage from './pages/admin/DashboardPage';
 import ReservationsPage from './pages/admin/ReservationsPage';
-import PlaceholderAdminPage from './pages/admin/PlaceholderAdminPage';
+import GenericCrudPage from './pages/admin/GenericCrudPage';
 import LoginPage from './pages/admin/LoginPage';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
@@ -36,7 +36,7 @@ function App() {
           <Route path="kvkk" element={<LegalPage title="KVKK Aydınlatma Metni" />} />
           <Route path="gizlilik-politikasi" element={<LegalPage title="Gizlilik Politikası" />} />
           <Route path="cerez-politikasi" element={<LegalPage title="Çerez Politikası" />} />
-          <Route path="blog" element={<PlaceholderAdminPage title="Blog" />} />
+          <Route path="blog" element={<LegalPage title="Blog" />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
 
@@ -49,10 +49,10 @@ function App() {
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="reservations" element={<ReservationsPage />} />
-            <Route path="services" element={<PlaceholderAdminPage title="Hizmet Yönetimi" />} />
-            <Route path="gallery" element={<PlaceholderAdminPage title="Galeri Yönetimi" />} />
-            <Route path="blog" element={<PlaceholderAdminPage title="Blog Yönetimi" />} />
-            <Route path="settings" element={<PlaceholderAdminPage title="Site Ayarları" />} />
+            <Route path="services" element={<GenericCrudPage title="Hizmet Yönetimi" endpoint="services" />} />
+            <Route path="gallery" element={<GenericCrudPage title="Galeri Yönetimi" endpoint="gallery" />} />
+            <Route path="blog" element={<GenericCrudPage title="Blog Yönetimi" endpoint="blog" />} />
+            <Route path="settings" element={<GenericCrudPage title="Site Ayarları" endpoint="settings" />} />
           </Route>
         </Route>
       </Routes>

@@ -26,6 +26,9 @@ jobs:
         working-directory: ./frontend
         run: npm run build
 
+      - name: Prepare Backend API for Deployment
+        run: cp -r backend/api frontend/dist/api
+
       - name: Sync FTP Deployment
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
