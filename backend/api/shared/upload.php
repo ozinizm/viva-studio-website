@@ -17,12 +17,29 @@ function handleUpload($file, $targetDir, $allowedTypes = ['image/jpeg', 'image/p
         sendError('File too large', 400);
     }
 
-    // Target dir based on doc root to be safe
-    // Since api is inside vivastudiopilates.com/api, uploads will be in vivastudiopilates.com/uploads
-    $baseDir = __DIR__ . '/../uploads/' . $targetDir;
+    // Target dir based on site root (vivastudiopilates.com/uploads/...)
+    $siteRoot = dirname(__DIR__, 2);
+    $baseDir = $siteRoot . '/uploads/' . $targetDir;
     
-    if (!is_dir($baseDir)) {
-        mkdir($baseDir, 0755, true);
+    // Auto-create required folders
+    $requiredDirs = [
+        $siteRoot . '/uploads',
+        $siteRoot . '/uploads/logos',
+        $siteRoot . '/uploads/favicons',
+        $siteRoot . '/uploads/hero',
+        $siteRoot . '/uploads/gallery',
+        $siteRoot . '/uploads/videos',
+        $siteRoot . '/uploads/blog',
+        $siteRoot . '/uploads/seo',
+        $siteRoot . '/uploads/legal'
+    ];
+    
+    foreach ($requiredDirs as $dir) {
+        if (!is_dir($dir)) {
+            if (!mkdir($dir, 0755, true) && !is_dir($dir)) {
+                sendError('Upload directory could not be created: ' . basename($dir), 500);
+            }
+        }
     }
 
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);

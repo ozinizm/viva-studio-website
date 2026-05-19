@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SEO from '../../components/common/SEO';
 import { galleryItems as mockGalleryItems } from '../../data/mockData';
+import { getMediaUrl } from '../../utils/mediaUrl';
 
 interface GalleryItem {
   id: number;
@@ -108,7 +109,7 @@ const GalleryPage = () => {
                     {item.media_type === 'video' ? (
                       <div className="w-full h-full relative">
                         {item.image_url ? (
-                          <video src={item.image_url} className="w-full h-full object-cover" muted playsInline />
+                          <video src={getMediaUrl(item.image_url)} className="w-full h-full object-cover" muted playsInline />
                         ) : (
                           <div className="w-full h-full flex flex-col items-center justify-center bg-sage-dark/10">
                             <span className="text-4xl">🎬</span>
@@ -118,7 +119,7 @@ const GalleryPage = () => {
                         <span className="absolute top-4 left-4 bg-sage text-warm-white text-xs px-2.5 py-1 rounded-full shadow-sm">Video</span>
                       </div>
                     ) : (
-                      <img src={item.image_url} alt={item.alt_text || item.category} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                      <img src={getMediaUrl(item.image_url)} alt={item.alt_text || item.category} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                     )}
                     <div className="absolute inset-0 bg-charcoal/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-center p-4">
                       <span className="text-warm-white font-medium text-lg tracking-wider mb-1">{item.title || item.category}</span>
@@ -150,14 +151,14 @@ const GalleryPage = () => {
             </button>
             {selectedMedia.media_type === 'video' ? (
               <video 
-                src={selectedMedia.image_url || selectedMedia.video_url} 
+                src={getMediaUrl(selectedMedia.image_url || selectedMedia.video_url)} 
                 controls 
                 autoPlay 
                 className="max-w-full max-h-[80vh] object-contain" 
               />
             ) : (
               <img 
-                src={selectedMedia.image_url} 
+                src={getMediaUrl(selectedMedia.image_url)} 
                 alt={selectedMedia.alt_text || selectedMedia.category} 
                 className="max-w-full max-h-[80vh] object-contain" 
               />

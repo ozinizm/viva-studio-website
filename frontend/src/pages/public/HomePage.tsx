@@ -5,6 +5,7 @@ import SEO from '../../components/common/SEO';
 import { testimonials, services as mockServices } from '../../data/mockData';
 import { getWhatsAppUrl, trackWhatsAppClick } from '../../services/trackingService';
 import { apiClient } from '../../services/apiClient';
+import { getMediaUrl } from '../../utils/mediaUrl';
 
 const HomePage = () => {
   const [apiServices, setApiServices] = useState<any[]>([]);
@@ -86,7 +87,7 @@ const HomePage = () => {
             {apiServices.slice(0, 4).map(service => (
               <div key={service.id} className="bg-warm-white rounded-[24px] overflow-hidden shadow-soft border border-border-soft transition-transform hover:-translate-y-1">
                 <div className="h-48 overflow-hidden">
-                  <img src={service.image_url || 'https://via.placeholder.com/400x300'} alt={service.title} className="w-full h-full object-cover" />
+                  <img src={getMediaUrl(service.image_url)} alt={service.title} className="w-full h-full object-cover" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-sage-dark mb-2">{service.title}</h3>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { apiClient } from '../../services/apiClient';
+import { getMediaUrl } from '../../utils/mediaUrl';
 
 export default function SettingsPage() {
     const [settings, setSettings] = useState<any>({});
@@ -110,7 +111,7 @@ export default function SettingsPage() {
                         <div>
                             <label className="block text-sm font-medium text-charcoal mb-2">Logo Yükle</label>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white p-4 rounded-xl border">
-                                {settings.logo_url && <img src={settings.logo_url} alt="Logo" className="h-12 object-contain bg-sage/5 p-1 rounded border" />}
+                                {settings.logo_url && <img src={getMediaUrl(settings.logo_url)} alt="Logo" className="h-12 object-contain bg-sage/5 p-1 rounded border" />}
                                 <div className="flex-1 space-y-2 w-full">
                                     <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'logo_url', 'logos')} className="text-sm" />
                                     <input name="logo_url" value={settings.logo_url || ''} onChange={handleChange} className="w-full px-3 py-1 rounded-lg border text-xs font-mono" placeholder="Logo yolu veya URL" />
@@ -120,7 +121,7 @@ export default function SettingsPage() {
                         <div>
                             <label className="block text-sm font-medium text-charcoal mb-2">Favicon Yükle</label>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white p-4 rounded-xl border">
-                                {settings.favicon_url && <img src={settings.favicon_url} alt="Favicon" className="w-8 h-8 object-contain rounded border" />}
+                                {settings.favicon_url && <img src={getMediaUrl(settings.favicon_url)} alt="Favicon" className="w-8 h-8 object-contain rounded border" />}
                                 <div className="flex-1 space-y-2 w-full">
                                     <input type="file" accept=".ico,image/png,image/svg+xml" onChange={(e) => handleFileUpload(e, 'favicon_url', 'favicons')} className="text-sm" />
                                     <input name="favicon_url" value={settings.favicon_url || ''} onChange={handleChange} className="w-full px-3 py-1 rounded-lg border text-xs font-mono" placeholder="Favicon yolu veya URL" />
@@ -232,7 +233,7 @@ export default function SettingsPage() {
                         <div>
                             <label className="block text-sm font-medium text-charcoal mb-2">Hero Görseli Yükle (Video aktif değilse gösterilir)</label>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white p-4 rounded-xl border">
-                                {settings.hero_image_url && <img src={settings.hero_image_url} alt="Hero" className="h-12 object-contain rounded border" />}
+                                {settings.hero_image_url && <img src={getMediaUrl(settings.hero_image_url)} alt="Hero" className="h-12 object-contain rounded border" />}
                                 <div className="flex-1 space-y-2 w-full">
                                     <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'hero_image_url', 'hero')} className="text-sm" />
                                     <input name="hero_image_url" value={settings.hero_image_url || ''} onChange={handleChange} className="w-full px-3 py-1 rounded-lg border text-xs font-mono" placeholder="Görsel yolu veya URL" />
@@ -242,7 +243,7 @@ export default function SettingsPage() {
                         <div>
                             <label className="block text-sm font-medium text-charcoal mb-2">Mobil Poster Görseli Yükle</label>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white p-4 rounded-xl border">
-                                {settings.hero_mobile_poster_url && <img src={settings.hero_mobile_poster_url} alt="Poster" className="h-12 object-contain rounded border" />}
+                                {settings.hero_mobile_poster_url && <img src={getMediaUrl(settings.hero_mobile_poster_url)} alt="Poster" className="h-12 object-contain rounded border" />}
                                 <div className="flex-1 space-y-2 w-full">
                                     <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'hero_mobile_poster_url', 'hero')} className="text-sm" />
                                     <input name="hero_mobile_poster_url" value={settings.hero_mobile_poster_url || ''} onChange={handleChange} className="w-full px-3 py-1 rounded-lg border text-xs font-mono" placeholder="Poster yolu veya URL" />
@@ -269,7 +270,7 @@ export default function SettingsPage() {
                         <div>
                             <label className="block text-sm font-medium text-charcoal mb-2">Open Graph Görseli Yükle</label>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white p-4 rounded-xl border">
-                                {settings.og_image_url && <img src={settings.og_image_url} alt="OG" className="h-12 object-contain rounded border" />}
+                                {settings.og_image_url && <img src={getMediaUrl(settings.og_image_url)} alt="OG" className="h-12 object-contain rounded border" />}
                                 <div className="flex-1 space-y-2 w-full">
                                     <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'og_image_url', 'seo')} className="text-sm" />
                                     <input name="og_image_url" value={settings.og_image_url || ''} onChange={handleChange} className="w-full px-3 py-1 rounded-lg border text-xs font-mono" placeholder="Görsel yolu veya URL" />

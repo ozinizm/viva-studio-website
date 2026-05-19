@@ -26,7 +26,15 @@ try {
             throw $ex;
         }
     }
-    sendResponse(['success' => true, 'message' => 'Uploaded successfully', 'url' => $path]);
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    $host = $_SERVER['HTTP_HOST'];
+    $absoluteUrl = $protocol . $host . $path;
+    sendResponse([
+        'success' => true, 
+        'message' => 'Uploaded successfully', 
+        'url' => $path,
+        'absolute_url' => $absoluteUrl
+    ]);
 } catch (Exception $e) {
     sendError('Database error', 500);
 }

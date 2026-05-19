@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { apiClient } from '../../services/apiClient';
+import { getMediaUrl } from '../../utils/mediaUrl';
 
 export default function BlogAdminPage() {
     const [data, setData] = useState<any[]>([]);
@@ -169,7 +170,7 @@ export default function BlogAdminPage() {
                             <div className="bg-white p-4 rounded-xl border border-border-soft space-y-3">
                                 <label className="block text-sm font-medium text-charcoal">Kapak Görseli</label>
                                 <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                                    {formData.cover_image_url && <img src={formData.cover_image_url} alt="Kapak" className="h-16 w-24 object-cover rounded border bg-sage/5" />}
+                                    {formData.cover_image_url && <img src={getMediaUrl(formData.cover_image_url)} alt="Kapak" className="h-16 w-24 object-cover rounded border bg-sage/5" />}
                                     <div className="flex-1 space-y-2 w-full">
                                         <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'cover_image_url')} className="text-xs" />
                                         <input type="text" value={formData.cover_image_url || ''} onChange={e => setFormData({...formData, cover_image_url: e.target.value})} className="w-full px-3 py-1 text-xs border rounded font-mono" placeholder="Kapak Görseli URL veya yolu" />

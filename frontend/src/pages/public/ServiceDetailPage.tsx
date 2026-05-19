@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import SEO from '../../components/common/SEO';
 import { services as mockServices } from '../../data/mockData';
 import { getWhatsAppUrl, trackWhatsAppClick } from '../../services/trackingService';
+import { getMediaUrl } from '../../utils/mediaUrl';
 
 const ServiceDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -106,9 +107,9 @@ const ServiceDetailPage = () => {
       <div className="relative h-[50vh] flex items-center justify-center">
         <div className="absolute inset-0 z-0">
           {service.videoUrl ? (
-            <video src={service.videoUrl} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+            <video src={getMediaUrl(service.videoUrl)} autoPlay loop muted playsInline className="w-full h-full object-cover" />
           ) : (
-            <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover" />
+            <img src={getMediaUrl(service.imageUrl)} alt={service.title} className="w-full h-full object-cover" />
           )}
           <div className="absolute inset-0 bg-charcoal/50" />
         </div>

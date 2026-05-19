@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { apiClient } from '../../services/apiClient';
+import { getMediaUrl } from '../../utils/mediaUrl';
 
 export default function GalleryAdminPage() {
     const [data, setData] = useState<any[]>([]);
@@ -105,7 +106,7 @@ export default function GalleryAdminPage() {
                             {item.media_type === 'video' ? (
                                 <div className="w-full h-32 bg-sage-dark/10 flex items-center justify-center text-xs text-charcoal/70 relative">
                                     {item.image_url ? (
-                                        <video src={item.image_url} className="w-full h-full object-cover" muted playsInline />
+                                        <video src={getMediaUrl(item.image_url)} className="w-full h-full object-cover" muted playsInline />
                                     ) : (
                                         <div className="flex flex-col items-center">
                                             <span className="text-lg">🎬</span>
@@ -115,7 +116,7 @@ export default function GalleryAdminPage() {
                                     <span className="absolute top-2 left-2 bg-sage text-warm-white text-[10px] px-1.5 py-0.5 rounded">Video</span>
                                 </div>
                             ) : (
-                                <img src={item.image_url} alt={item.alt_text} className="w-full h-32 object-cover" />
+                                <img src={getMediaUrl(item.image_url)} alt={item.alt_text} className="w-full h-32 object-cover" />
                             )}
                             <div className="p-2 border-t">
                                 <div className="text-xs font-bold truncate">{item.title || 'Başlıksız'}</div>

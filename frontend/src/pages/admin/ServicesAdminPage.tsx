@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { apiClient } from '../../services/apiClient';
+import { getMediaUrl } from '../../utils/mediaUrl';
 
 export default function ServicesAdminPage() {
     const [data, setData] = useState<any[]>([]);
@@ -181,7 +182,7 @@ export default function ServicesAdminPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="bg-white p-3 rounded-xl border">
                                     <label className="block text-sm font-medium mb-1 text-charcoal">Hizmet Görseli</label>
-                                    {formData.image_url && <img src={formData.image_url} alt="Hizmet" className="h-16 w-full object-cover rounded mb-2 border" />}
+                                    {formData.image_url && <img src={getMediaUrl(formData.image_url)} alt="Hizmet" className="h-16 w-full object-cover rounded mb-2 border" />}
                                     <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'image_url')} className="text-xs w-full" />
                                     <input type="text" value={formData.image_url || ''} onChange={e => setFormData({...formData, image_url: e.target.value})} className="w-full px-2 py-1 mt-1 text-xs border rounded font-mono" placeholder="Görsel URL" />
                                 </div>

@@ -22,7 +22,14 @@ $folder = preg_replace('/[^a-zA-Z0-9_\-]/', '', $folder);
 $path = handleUpload($_FILES['file'], $folder);
 
 if ($path) {
-    sendResponse(['success' => true, 'url' => $path]);
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    $host = $_SERVER['HTTP_HOST'];
+    $absoluteUrl = $protocol . $host . $path;
+    sendResponse([
+        'success' => true, 
+        'url' => $path,
+        'absolute_url' => $absoluteUrl
+    ]);
 } else {
     sendError('Upload failed', 500);
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import SEO from '../../components/common/SEO';
 import { services as mockServices } from '../../data/mockData';
 import { getWhatsAppUrl, trackWhatsAppClick } from '../../services/trackingService';
+import { getMediaUrl } from '../../utils/mediaUrl';
 
 const ServicesPage = () => {
   const [services, setServices] = useState<any[]>([]);
@@ -59,7 +60,7 @@ const ServicesPage = () => {
                 <div key={service.id} className={`flex flex-col lg:flex-row items-center gap-12 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
                   <div className="w-full lg:w-1/2">
                     <div className="rounded-[32px] overflow-hidden shadow-soft aspect-[4/3]">
-                      <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover" />
+                      <img src={getMediaUrl(service.imageUrl)} alt={service.title} className="w-full h-full object-cover" />
                     </div>
                   </div>
                   <div className="w-full lg:w-1/2">
