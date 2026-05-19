@@ -2,5 +2,5 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/fikircre/vivastudiopilates.com/
-    - /bin/mkdir -p $DEPLOYPATH
-    - /bin/cp -R frontend/dist/. $DEPLOYPATH
+    - /bin/rm -rf $DEPLOYPATH/*
+    - /bin/cp -R frontend/dist/* $DEPLOYPATH
