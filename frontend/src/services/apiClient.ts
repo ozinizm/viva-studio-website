@@ -13,8 +13,16 @@ export const apiClient = {
         
         try {
             const response = await fetch(`${API_BASE_URL}${endpoint}`, { ...options, headers });
-            const data = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(data.error || 'API Error');
+            const data = await response.json().catch(() => null);
+            
+            if (!response.ok || (data && data.success === false)) {
+                throw new Error(data?.message || data?.error || 'API Error');
+            }
+            
+            // If data is null, or just a success message without payload
+            if (!data) return {};
+            if (data.success && data.data !== undefined) return data.data;
+            
             return data;
         } catch (error) {
             console.error('API Error:', error);

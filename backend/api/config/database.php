@@ -25,7 +25,7 @@ class Database {
         } catch (PDOException $e) {
             // For production, log error instead of outputting
             error_log("Connection failed: " . $e->getMessage());
-            die(json_encode(["error" => "Database connection failed"]));
+            throw new Exception("Database connection failed");
         }
     }
 
