@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { apiClient } from '../../services/apiClient';
-import { getMediaUrl } from '../../utils/mediaUrl';
+import { getMediaUrl, handleImageError } from '../../utils/mediaUrl';
 
 export default function GalleryAdminPage() {
     const [data, setData] = useState<any[]>([]);
@@ -100,7 +100,11 @@ export default function GalleryAdminPage() {
             ) : (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {data.length === 0 ? (
-                        <div className="col-span-full py-8 text-center text-charcoal/50">Kayıt bulunamadı.</div>
+                        <div className="col-span-full py-12 text-center bg-white rounded-2xl border border-border-soft shadow-soft">
+                            <span className="text-4xl block mb-2">📸</span>
+                            <div className="text-charcoal font-medium">Medya bulunamadı</div>
+                            <div className="text-xs text-charcoal/50 mt-1">Sitenin galeri bölümünde gösterilecek henüz hiçbir görsel veya video yüklemediniz.</div>
+                        </div>
                     ) : data.map((item: any) => (
                         <div key={item.id} className="relative group rounded-xl overflow-hidden shadow-sm border border-border-soft bg-white">
                             {item.media_type === 'video' ? (
@@ -116,7 +120,7 @@ export default function GalleryAdminPage() {
                                     <span className="absolute top-2 left-2 bg-sage text-warm-white text-[10px] px-1.5 py-0.5 rounded">Video</span>
                                 </div>
                             ) : (
-                                <img src={getMediaUrl(item.image_url)} alt={item.alt_text} className="w-full h-32 object-cover" />
+                                <img src={getMediaUrl(item.image_url)} onError={handleImageError} alt={item.alt_text} className="w-full h-32 object-cover" />
                             )}
                             <div className="p-2 border-t">
                                 <div className="text-xs font-bold truncate">{item.title || 'Başlıksız'}</div>

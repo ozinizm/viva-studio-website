@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SEO from '../../components/common/SEO';
 import { galleryItems as mockGalleryItems } from '../../data/mockData';
-import { getMediaUrl } from '../../utils/mediaUrl';
+import { getMediaUrl, handleImageError } from '../../utils/mediaUrl';
 
 interface GalleryItem {
   id: number;
@@ -26,7 +26,15 @@ const GalleryPage = () => {
       .then(res => res.json())
       .then(data => {
         const rawList = Array.isArray(data) ? data : (data?.data || []);
-        const active = rawList.filter((item: any) => String(item.is_active) === '1' || item.is_active === true);
+        const active = rawList.filter((item: any) => {
+          const isActive = String(item.is_active) === '1' || item.is_active === true;
+          if (!isActive) return false;
+          // Filter out image items with empty or invalid image URLs
+          if (item.media_type === 'image' && (!item.image_url || item.image_url.trim() === '')) {
+            return false;
+          }
+          return true;
+        });
         if (active.length > 0) {
           // Sort by sort_order
           active.sort((a: any, b: any) => (parseInt(a.sort_order) || 0) - (parseInt(b.sort_order) || 0));
@@ -99,35 +107,43 @@ const GalleryPage = () => {
               </div>
 
               {/* Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredItems.map(item => (
-                  <div 
-                    key={item.id} 
-                    onClick={() => setSelectedMedia(item)}
-                    className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer shadow-soft bg-sage-light/10 border border-border-soft"
-                  >
-                    {item.media_type === 'video' ? (
-                      <div className="w-full h-full relative">
-                        {item.image_url ? (
-                          <video src={getMediaUrl(item.image_url)} className="w-full h-full object-cover" muted playsInline />
-                        ) : (
-                          <div className="w-full h-full flex flex-col items-center justify-center bg-sage-dark/10">
-                            <span className="text-4xl">🎬</span>
-                            <span className="mt-2 text-xs font-medium text-charcoal/70">Videoyu İzle</span>
-                          </div>
-                        )}
-                        <span className="absolute top-4 left-4 bg-sage text-warm-white text-xs px-2.5 py-1 rounded-full shadow-sm">Video</span>
+              {filteredItems.length === 0 ? (
+                <div className="text-center py-20 bg-warm-white rounded-3xl border border-border-soft max-w-md mx-auto shadow-soft">
+                  <span className="text-5xl block mb-4">✨</span>
+                  <h3 className="text-xl font-serif font-bold text-charcoal mb-2">Galeri Henüz Boş</h3>
+                  <p className="text-sm text-charcoal/60">Viva Studio'nun premium anları çok yakında burada paylaşılacak.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredItems.map(item => (
+                    <div 
+                      key={item.id} 
+                      onClick={() => setSelectedMedia(item)}
+                      className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer shadow-soft bg-sage-light/10 border border-border-soft"
+                    >
+                      {item.media_type === 'video' ? (
+                        <div className="w-full h-full relative">
+                          {item.image_url ? (
+                            <video src={getMediaUrl(item.image_url)} className="w-full h-full object-cover" muted playsInline />
+                          ) : (
+                            <div className="w-full h-full flex flex-col items-center justify-center bg-sage-dark/10">
+                              <span className="text-4xl">🎬</span>
+                              <span className="mt-2 text-xs font-medium text-charcoal/70">Videoyu İzle</span>
+                            </div>
+                          )}
+                          <span className="absolute top-4 left-4 bg-sage text-warm-white text-xs px-2.5 py-1 rounded-full shadow-sm">Video</span>
+                        </div>
+                      ) : (
+                        <img src={getMediaUrl(item.image_url)} onError={handleImageError} alt={item.alt_text || item.category} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                      )}
+                      <div className="absolute inset-0 bg-charcoal/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-center p-4">
+                        <span className="text-warm-white font-medium text-lg tracking-wider mb-1">{item.title || item.category}</span>
+                        <span className="text-warm-white/80 text-xs">{item.media_type === 'video' ? 'Oynatmak için tıklayın' : 'Büyütmek için tıklayın'}</span>
                       </div>
-                    ) : (
-                      <img src={getMediaUrl(item.image_url)} alt={item.alt_text || item.category} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                    )}
-                    <div className="absolute inset-0 bg-charcoal/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-center p-4">
-                      <span className="text-warm-white font-medium text-lg tracking-wider mb-1">{item.title || item.category}</span>
-                      <span className="text-warm-white/80 text-xs">{item.media_type === 'video' ? 'Oynatmak için tıklayın' : 'Büyütmek için tıklayın'}</span>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </>
           )}
         </div>

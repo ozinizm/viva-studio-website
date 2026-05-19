@@ -5,28 +5,36 @@
 
 export const PLACEHOLDER_IMAGE = 'https://vivastudiopilates.com/assets/images/placeholder.jpg';
 
-const BACKEND_BASE = import.meta.env.PROD ? window.location.origin : 'http://localhost';
-
+/**
+ * Format media URL using premium structured rules:
+ * - If empty/null/undefined: returns fallback placeholder
+ * - If starts with http/https: returns directly
+ * - If relative (no leading slash): prepends '/'
+ * - If starts with /uploads: prepends window.location.origin
+ */
 export function getMediaUrl(url: string | null | undefined, fallback: string = PLACEHOLDER_IMAGE): string {
     if (!url) return fallback;
     
-    const trimmed = url.trim();
+    let trimmed = url.trim();
     if (trimmed === '') return fallback;
     
-    // If it starts with http/https, use it directly
+    // URL http ile başlıyorsa direkt kullan
     if (/^https?:\/\//i.test(trimmed)) {
         return trimmed;
     }
     
-    // If it starts with /uploads, prepend origin or resolve relative to current host
-    if (trimmed.startsWith('/uploads')) {
-        return BACKEND_BASE + trimmed;
+    // URL relative ise başına / ekle
+    if (!trimmed.startsWith('/')) {
+        trimmed = '/' + trimmed;
     }
     
-    // If it's another relative path, ensure leading slash and prepend origin
-    if (trimmed.startsWith('/')) {
-        return BACKEND_BASE + trimmed;
-    }
-    
-    return BACKEND_BASE + '/' + trimmed;
+    // URL /uploads ile başlıyorsa window.location.origin + url kullan
+    return window.location.origin + trimmed;
+}
+
+/**
+ * Fallback event handler to replace broken images with a premium placeholder
+ */
+export function handleImageError(e: React.SyntheticEvent<HTMLImageElement, Event>) {
+    e.currentTarget.src = PLACEHOLDER_IMAGE;
 }

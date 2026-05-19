@@ -5,9 +5,18 @@ require_once __DIR__ . '/../shared/upload.php';
 require_once __DIR__ . '/../config/database.php';
 handleCors();
 verifyToken();
-if(!isset($_FILES['image'])) sendError('No image uploaded');
-$path = handleUpload($_FILES['image'], 'gallery');
-if(!$path) sendError('Upload failed');
+$path = '';
+$media_type = $_POST['media_type'] ?? 'image';
+$video_url = $_POST['video_url'] ?? '';
+
+if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $path = handleUpload($_FILES['image'], 'gallery');
+    if (!$path) sendError('Upload failed');
+} else {
+    if ($media_type === 'image' || ($media_type === 'video' && empty($video_url))) {
+        sendError('Lütfen yüklenecek bir dosya seçin veya video URL girin.', 400);
+    }
+}
 try {
     $db = Database::getInstance();
     

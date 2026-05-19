@@ -18,7 +18,7 @@ function handleUpload($file, $targetDir, $allowedTypes = ['image/jpeg', 'image/p
     }
 
     // Target dir based on site root (vivastudiopilates.com/uploads/...)
-    $siteRoot = dirname(__DIR__, 2);
+    $siteRoot = realpath(dirname(__DIR__, 2)) ?: dirname(__DIR__, 2);
     $baseDir = $siteRoot . '/uploads/' . $targetDir;
     
     // Auto-create required folders
@@ -36,8 +36,22 @@ function handleUpload($file, $targetDir, $allowedTypes = ['image/jpeg', 'image/p
     
     foreach ($requiredDirs as $dir) {
         if (!is_dir($dir)) {
-            if (!mkdir($dir, 0755, true) && !is_dir($dir)) {
-                sendError('Upload directory could not be created: ' . basename($dir), 500);
+            // Try 0755 first, then 0777 if it fails
+            if (!@mkdir($dir, 0755, true)) {
+                if (!@mkdir($dir, 0777, true) && !is_dir($dir)) {
+                    sendError('Upload directory could not be created', 500);
+                }
+            }
+        }
+        
+        // Ensure it is writable
+        if (!is_writable($dir)) {
+            @chmod($dir, 0755);
+            if (!is_writable($dir)) {
+                @chmod($dir, 0777);
+                if (!is_writable($dir)) {
+                    sendError('Upload directory could not be created', 500);
+                }
             }
         }
     }

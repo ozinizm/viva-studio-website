@@ -28,14 +28,19 @@ function generateToken($userId, $email, $role) {
 function verifyToken() {
     $authHeader = '';
     $headers = function_exists('apache_request_headers') ? apache_request_headers() : [];
-    if (isset($headers['Authorization'])) {
-        $authHeader = $headers['Authorization'];
-    } elseif (isset($headers['authorization'])) {
-        $authHeader = $headers['authorization'];
-    } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
-    } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-        $authHeader = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+    foreach ($headers as $key => $value) {
+        if (strcasecmp($key, 'Authorization') === 0) {
+            $authHeader = $value;
+            break;
+        }
+    }
+
+    if (!$authHeader) {
+        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+        } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+            $authHeader = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+        }
     }
 
     if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
