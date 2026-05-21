@@ -64,8 +64,11 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
 
   const heroTitle = settings.hero_title ?? 'Bedenini Güçlendir,\nHayatını Dönüştür';
   const heroDesc = settings.hero_description ?? 'Tuzla\'nın premium wellness stüdyosunda pilates, EMS, Vacu Activ ve G5 ile forma girin.';
+  const cta1Active = settings.cta1_active === undefined || settings.cta1_active === '1' || settings.cta1_active === true;
   const cta1Text = settings.cta1_text ?? 'Ücretsiz Danışma Al';
   const cta1Link = (settings.cta1_link && settings.cta1_link.trim() !== '') ? settings.cta1_link : getWaUrl(settings.whatsapp, 'Merhaba, ücretsiz danışma almak istiyorum.');
+  
+  const cta2Active = settings.cta2_active === undefined || settings.cta2_active === '1' || settings.cta2_active === true;
   const cta2Text = settings.cta2_text ?? 'Hizmetleri Keşfet';
   const cta2Link = settings.cta2_link ?? '/hizmetler';
 
@@ -162,7 +165,7 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="text-white font-bold mb-6 leading-tight"
             style={{
-              fontSize: 'clamp(2.2rem, 6vw, 4.5rem)',
+              fontSize: 'clamp(1.8rem, 5.5vw, 4.5rem)',
               letterSpacing: '-0.03em',
               lineHeight: 1.1,
               whiteSpace: 'pre-line',
@@ -178,7 +181,7 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.45 }}
-            className="text-white/80 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed"
+            className="text-white/80 text-base md:text-xl mb-6 md:mb-10 max-w-2xl mx-auto leading-relaxed"
           >
             {heroDesc}
           </motion.p>
@@ -190,7 +193,7 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="flex flex-wrap items-center justify-center gap-2 mb-10"
+            className="flex flex-wrap items-center justify-center gap-2 mb-6 md:mb-10"
           >
             {heroTags.map((tag: string) => (
               <span
@@ -205,14 +208,14 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
         )}
 
         {/* CTAs */}
-        {(cta1Text || cta2Text) && (
+        {((cta1Active && cta1Text) || (cta2Active && cta2Text)) && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.55 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-2"
           >
-            {cta1Text && (
+            {(cta1Active && cta1Text) && (
               cta1Link.startsWith('http') ? (
                 <a href={cta1Link} target="_blank" rel="noreferrer" className="btn-gradient w-full sm:w-auto text-base">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -225,7 +228,7 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
               )
             )}
 
-            {cta2Text && (
+            {(cta2Active && cta2Text) && (
               cta2Link.startsWith('http') ? (
                 <a href={cta2Link} target="_blank" rel="noreferrer"
                   className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-base text-white transition-all duration-300"
