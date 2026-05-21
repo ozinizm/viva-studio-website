@@ -1,4 +1,5 @@
 User-agent: *
-Allow: /
+Disallow: /admin/
+Disallow: /api/
 
-Sitemap: https://vivastudiopilates.com/sitemap.xml
+Sitemap: https://vivastudiopilates.com/api/sitemap.php
