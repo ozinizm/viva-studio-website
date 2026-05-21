@@ -2,7 +2,7 @@
 // backend/api/shared/upload.php
 require_once __DIR__ . '/response.php';
 
-function handleUpload($file, $targetDir, $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml', 'video/mp4', 'video/webm']) {
+function handleUpload($file, $targetDir, $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml', 'image/gif', 'video/mp4', 'video/webm', 'video/quicktime', 'video/x-m4v']) {
     if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
         return null;
     }
@@ -12,7 +12,7 @@ function handleUpload($file, $targetDir, $allowedTypes = ['image/jpeg', 'image/p
         sendError('Invalid file type: ' . $fileType, 400);
     }
 
-    $maxSize = strpos($fileType, 'video') !== false ? 20 * 1024 * 1024 : 5 * 1024 * 1024; // 20MB video, 5MB image
+    $maxSize = strpos($fileType, 'video') !== false ? 100 * 1024 * 1024 : 15 * 1024 * 1024; // 100MB video, 15MB image
     if ($file['size'] > $maxSize) {
         sendError('File too large', 400);
     }

@@ -59,7 +59,7 @@ export default function GalleryAdminPage() {
         sendFormData.append('is_active', String(formData.is_active ? 1 : 0));
 
         setUploading(true);
-        setMessage({ type: 'info', text: 'Yükleniyor...' });
+        setMessage({ type: 'info', text: 'Yükleniyor... (Dosya boyutuna göre 1-2 dakika sürebilir, lütfen bekleyin)' });
 
         try {
             const token = localStorage.getItem('viva_admin_token') || '';
