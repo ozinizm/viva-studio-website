@@ -9,8 +9,10 @@ interface HeroSettings {
   hero_tags: string;
   cta1_text: string;
   cta1_link: string;
+  cta1_active: string;
   cta2_text: string;
   cta2_link: string;
+  cta2_active: string;
   hero_overlay_opacity: string;
   hero_image_url: string;
   hero_video_url: string;
@@ -26,8 +28,10 @@ const HERO_DEFAULTS: HeroSettings = {
   hero_tags: 'Pilates, EMS, Vacu Activ, G5, Bölgesel İncelme',
   cta1_text: 'Ücretsiz Danışma Al',
   cta1_link: '',
+  cta1_active: '1',
   cta2_text: 'Hizmetleri Keşfet',
   cta2_link: '/hizmetler',
+  cta2_active: '1',
   hero_overlay_opacity: '0.5',
   hero_image_url: '',
   hero_video_url: '',
@@ -63,8 +67,10 @@ const HeroAdminPage = () => {
             hero_tags: s.hero_tags ?? prev.hero_tags,
             cta1_text: s.cta1_text ?? prev.cta1_text,
             cta1_link: s.cta1_link ?? prev.cta1_link,
+            cta1_active: s.cta1_active ?? prev.cta1_active,
             cta2_text: s.cta2_text ?? prev.cta2_text,
             cta2_link: s.cta2_link ?? prev.cta2_link,
+            cta2_active: s.cta2_active ?? prev.cta2_active,
             hero_overlay_opacity: s.hero_overlay_opacity ?? prev.hero_overlay_opacity,
             hero_image_url: s.hero_image_url ?? '',
             hero_video_url: s.hero_video_url ?? '',
@@ -296,21 +302,34 @@ const HeroAdminPage = () => {
       <div className="bg-white rounded-3xl p-6 shadow-card space-y-5">
         <h2 className="font-bold text-text-dark border-b border-sage/30 pb-4">🔘 CTA Butonları</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div>
-            <label className="form-label">Buton 1 Metni</label>
-            <input name="cta1_text" value={form.cta1_text} onChange={handleChange} className="form-input" placeholder="Ücretsiz Danışma Al" />
+          <div className="space-y-4">
+            <div className="flex items-center">
+              <input type="checkbox" id="cta1_active" checked={form.cta1_active === '1'} onChange={e => setForm(prev => ({...prev, cta1_active: e.target.checked ? '1' : '0'}))} className="w-5 h-5 text-primary rounded focus:ring-primary border-gray-300" />
+              <label htmlFor="cta1_active" className="ml-3 font-semibold text-text-dark cursor-pointer">Buton 1 Aktif</label>
+            </div>
+            <div>
+              <label className="form-label">Buton 1 Metni</label>
+              <input name="cta1_text" value={form.cta1_text} onChange={handleChange} className="form-input" placeholder="Ücretsiz Danışma Al" />
+            </div>
+            <div>
+              <label className="form-label">Buton 1 Linki</label>
+              <input name="cta1_link" value={form.cta1_link} onChange={handleChange} className="form-input" placeholder="/iletisim ya da https://wa.me/..." />
+            </div>
           </div>
-          <div>
-            <label className="form-label">Buton 1 Linki</label>
-            <input name="cta1_link" value={form.cta1_link} onChange={handleChange} className="form-input" placeholder="/iletisim ya da https://wa.me/..." />
-          </div>
-          <div>
-            <label className="form-label">Buton 2 Metni</label>
-            <input name="cta2_text" value={form.cta2_text} onChange={handleChange} className="form-input" placeholder="Hizmetleri Keşfet" />
-          </div>
-          <div>
-            <label className="form-label">Buton 2 Linki</label>
-            <input name="cta2_link" value={form.cta2_link} onChange={handleChange} className="form-input" placeholder="/hizmetler" />
+          
+          <div className="space-y-4">
+            <div className="flex items-center">
+              <input type="checkbox" id="cta2_active" checked={form.cta2_active === '1'} onChange={e => setForm(prev => ({...prev, cta2_active: e.target.checked ? '1' : '0'}))} className="w-5 h-5 text-primary rounded focus:ring-primary border-gray-300" />
+              <label htmlFor="cta2_active" className="ml-3 font-semibold text-text-dark cursor-pointer">Buton 2 Aktif</label>
+            </div>
+            <div>
+              <label className="form-label">Buton 2 Metni</label>
+              <input name="cta2_text" value={form.cta2_text} onChange={handleChange} className="form-input" placeholder="Hizmetleri Keşfet" />
+            </div>
+            <div>
+              <label className="form-label">Buton 2 Linki</label>
+              <input name="cta2_link" value={form.cta2_link} onChange={handleChange} className="form-input" placeholder="/hizmetler" />
+            </div>
           </div>
         </div>
       </div>
