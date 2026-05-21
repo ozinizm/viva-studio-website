@@ -110,7 +110,7 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
             playsInline
             poster={posterSrc ? getMediaUrl(posterSrc) : undefined}
             className="w-full h-full object-cover"
-            preload={isMobile ? 'none' : 'auto'}
+            preload="auto"
           >
             <source src={getMediaUrl(videoSrc)} type="video/mp4" />
           </video>
@@ -128,7 +128,7 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
 
         {/* Gradient Overlay */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 pointer-events-none"
           style={{
             background: `linear-gradient(
               160deg,

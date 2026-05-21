@@ -240,9 +240,9 @@ const GalleryPage = () => {
               className="relative max-w-5xl max-h-[90vh] w-full mx-4 flex items-center"
               onClick={e => e.stopPropagation()}
             >
-              {lightbox.media_type === 'video' && lightbox.video_url ? (
-                <video controls autoPlay className="w-full max-h-[85vh] rounded-2xl">
-                  <source src={getMediaUrl(lightbox.video_url)} />
+              {lightbox.media_type === 'video' ? (
+                <video controls autoPlay playsInline className="w-full max-h-[85vh] rounded-2xl bg-black">
+                  <source src={getMediaUrl(lightbox.video_url || lightbox.image_url || lightbox.url)} />
                 </video>
               ) : (
                 <img
