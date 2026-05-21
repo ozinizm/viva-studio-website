@@ -42,12 +42,12 @@ export default function SettingsPage() {
 
         const fd = new FormData();
         fd.append('file', file);
-        fd.append('type', type);
+        fd.append('folder', type === 'video' ? 'videos' : 'settings');
 
         setMessage({ type: 'info', text: 'Dosya yükleniyor...' });
         try {
             const token = localStorage.getItem('viva_admin_token') || '';
-            const res = await fetch('/api/gallery/upload.php', {
+            const res = await fetch('/api/shared/upload_file.php', {
                 method: 'POST',
                 headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
                 body: fd
