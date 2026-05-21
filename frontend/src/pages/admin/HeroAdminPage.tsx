@@ -6,6 +6,7 @@ import { getMediaUrl } from '../../utils/mediaUrl';
 interface HeroSettings {
   hero_title: string;
   hero_description: string;
+  hero_tags: string;
   cta1_text: string;
   cta1_link: string;
   cta2_text: string;
@@ -22,6 +23,7 @@ interface HeroSettings {
 const HERO_DEFAULTS: HeroSettings = {
   hero_title: 'Bedenini Güçlendir,\nHayatını Dönüştür',
   hero_description: 'Tuzla\'nın premium wellness stüdyosunda pilates, EMS, Vacu Activ ve G5 ile forma girin.',
+  hero_tags: 'Pilates, EMS, Vacu Activ, G5, Bölgesel İncelme',
   cta1_text: 'Ücretsiz Danışma Al',
   cta1_link: '',
   cta2_text: 'Hizmetleri Keşfet',
@@ -58,6 +60,7 @@ const HeroAdminPage = () => {
             ...prev,
             hero_title: s.hero_title ?? prev.hero_title,
             hero_description: s.hero_description ?? prev.hero_description,
+            hero_tags: s.hero_tags ?? prev.hero_tags,
             cta1_text: s.cta1_text ?? prev.cta1_text,
             cta1_link: s.cta1_link ?? prev.cta1_link,
             cta2_text: s.cta2_text ?? prev.cta2_text,
@@ -273,6 +276,19 @@ const HeroAdminPage = () => {
             rows={3}
             className="form-textarea"
           />
+        </div>
+
+        <div>
+          <label className="form-label">Servis Etiketleri</label>
+          <input
+            type="text"
+            name="hero_tags"
+            value={form.hero_tags}
+            onChange={handleChange}
+            className="form-input"
+            placeholder="Pilates, EMS, Yoga"
+          />
+          <p className="text-xs text-muted mt-1">Ana sayfada butonların üzerinde çıkan etiketler. Virgülle ayırarak yazın. Gizlemek için tamamen silebilirsiniz.</p>
         </div>
       </div>
 

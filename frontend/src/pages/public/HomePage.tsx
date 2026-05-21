@@ -65,12 +65,15 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
   const heroTitle = settings.hero_title ?? 'Bedenini Güçlendir,\nHayatını Dönüştür';
   const heroDesc = settings.hero_description ?? 'Tuzla\'nın premium wellness stüdyosunda pilates, EMS, Vacu Activ ve G5 ile forma girin.';
   const cta1Text = settings.cta1_text ?? 'Ücretsiz Danışma Al';
-  const cta1Link = settings.cta1_link ?? getWaUrl(settings.whatsapp, 'Merhaba, ücretsiz danışma almak istiyorum.');
+  const cta1Link = (settings.cta1_link && settings.cta1_link.trim() !== '') ? settings.cta1_link : getWaUrl(settings.whatsapp, 'Merhaba, ücretsiz danışma almak istiyorum.');
   const cta2Text = settings.cta2_text ?? 'Hizmetleri Keşfet';
   const cta2Link = settings.cta2_link ?? '/hizmetler';
 
   const isVideoActive = settings.hero_video_active === '1' || settings.hero_video_active === true;
   const mobileVideoActive = settings.hero_mobile_video_active === '1' || settings.hero_mobile_video_active === true;
+
+  const tagsStr = settings.hero_tags !== undefined && settings.hero_tags !== null ? settings.hero_tags : 'Pilates, EMS, Vacu Activ, G5, Bölgesel İncelme';
+  const heroTags = tagsStr.split(',').map((t: string) => t.trim()).filter(Boolean);
 
   // Media selection logic
   const desktopVideo = settings.hero_video_url;
@@ -182,22 +185,24 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
         )}
 
         {/* Service Tags */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="flex flex-wrap items-center justify-center gap-2 mb-10"
-        >
-          {['Pilates', 'EMS', 'Vacu Activ', 'G5', 'Bölgesel İncelme'].map((tag) => (
-            <span
-              key={tag}
-              className="px-3 py-1 rounded-full text-xs font-medium text-white/70"
-              style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}
-            >
-              {tag}
-            </span>
-          ))}
-        </motion.div>
+        {heroTags.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-wrap items-center justify-center gap-2 mb-10"
+          >
+            {heroTags.map((tag: string) => (
+              <span
+                key={tag}
+                className="px-3 py-1 rounded-full text-xs font-medium text-white/70"
+                style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}
+              >
+                {tag}
+              </span>
+            ))}
+          </motion.div>
+        )}
 
         {/* CTAs */}
         {(cta1Text || cta2Text) && (
