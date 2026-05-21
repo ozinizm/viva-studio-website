@@ -7,6 +7,7 @@ interface HeroSettings {
   hero_title: string;
   hero_description: string;
   hero_tags: string;
+  hero_text_active: string;
   cta1_text: string;
   cta1_link: string;
   cta1_active: string;
@@ -26,6 +27,7 @@ const HERO_DEFAULTS: HeroSettings = {
   hero_title: 'Bedenini Güçlendir,\nHayatını Dönüştür',
   hero_description: 'Tuzla\'nın premium wellness stüdyosunda pilates, EMS, Vacu Activ ve G5 ile forma girin.',
   hero_tags: 'Pilates, EMS, Vacu Activ, G5, Bölgesel İncelme',
+  hero_text_active: '1',
   cta1_text: 'Ücretsiz Danışma Al',
   cta1_link: '',
   cta1_active: '1',
@@ -65,6 +67,7 @@ const HeroAdminPage = () => {
             hero_title: s.hero_title ?? prev.hero_title,
             hero_description: s.hero_description ?? prev.hero_description,
             hero_tags: s.hero_tags ?? prev.hero_tags,
+            hero_text_active: s.hero_text_active ?? '1',
             cta1_text: s.cta1_text ?? prev.cta1_text,
             cta1_link: s.cta1_link ?? prev.cta1_link,
             cta1_active: s.cta1_active ?? prev.cta1_active,
@@ -258,7 +261,19 @@ const HeroAdminPage = () => {
 
       {/* Text Content */}
       <div className="bg-white rounded-3xl p-6 shadow-card space-y-5">
-        <h2 className="font-bold text-text-dark border-b border-sage/30 pb-4">📝 Metin İçeriği</h2>
+        <div className="flex items-center justify-between border-b border-sage/30 pb-4">
+          <h2 className="font-bold text-text-dark">📝 Metin İçeriği</h2>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <span className="text-sm font-medium">Yazıları Göster</span>
+            <input
+              type="checkbox"
+              name="hero_text_active"
+              checked={form.hero_text_active === '1'}
+              onChange={handleChange}
+              className="toggle-checkbox"
+            />
+          </label>
+        </div>
 
         <div>
           <label className="form-label">Hero Başlık</label>

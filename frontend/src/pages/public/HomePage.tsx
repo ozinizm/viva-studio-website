@@ -80,6 +80,8 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
   const tagsStr = settings.hero_tags !== undefined && settings.hero_tags !== null ? settings.hero_tags : 'Pilates, EMS, Vacu Activ, G5, Bölgesel İncelme';
   const heroTags = tagsStr.split(',').map((t: string) => t.trim()).filter(Boolean);
 
+  const heroTextActive = settings.hero_text_active === undefined || settings.hero_text_active === '1' || settings.hero_text_active === true;
+
   // Media selection logic
   const desktopVideo = settings.hero_video_url;
   const desktopPoster = settings.hero_image_url;
@@ -118,6 +120,7 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
             muted
             loop
             playsInline
+            controls
             poster={posterSrc ? getMediaUrl(posterSrc) : undefined}
             className="w-full h-full object-cover"
             preload="auto"

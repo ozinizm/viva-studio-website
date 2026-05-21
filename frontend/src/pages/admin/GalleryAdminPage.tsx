@@ -45,13 +45,17 @@ export default function GalleryAdminPage() {
         }
 
         if (file) {
-            sendFormData.append('file', file); // changed 'image' to 'file' to match generic upload if needed, wait, the PHP expects 'image' or 'file'? Let's keep it 'image' if that's what backend expects or 'file' if generic.
-            // Looking at the original: sendFormData.append('image', file);
             sendFormData.append('image', file);
         }
         
         sendFormData.append('media_type', formData.media_type || 'image');
         sendFormData.append('video_url', formData.video_url || '');
+
+        const posterInput = document.getElementById('posterInput') as HTMLInputElement;
+        if (posterInput && posterInput.files && posterInput.files.length > 0) {
+            sendFormData.append('poster', posterInput.files[0]);
+        }
+        
         sendFormData.append('title', formData.title || '');
         sendFormData.append('category', formData.category || 'Genel');
         sendFormData.append('alt_text', formData.alt_text || '');
@@ -183,8 +187,16 @@ export default function GalleryAdminPage() {
 
                             <div>
                                 <label className="form-label">Dosya Yükle {formData.media_type === 'image' && <span className="text-danger">*</span>}</label>
-                                <input type="file" ref={fileInputRef} accept={formData.media_type === 'video' ? 'video/mp4,video/webm' : 'image/*'} className="form-input p-2" />
+                                <input type="file" ref={fileInputRef} accept={formData.media_type === 'video' ? 'video/mp4,video/webm,video/quicktime' : 'image/*'} className="form-input p-2" />
                             </div>
+
+                            {formData.media_type === 'video' && (
+                                <div>
+                                    <label className="form-label">Kapak Görseli (Opsiyonel)</label>
+                                    <input type="file" id="posterInput" accept="image/*" className="form-input p-2" />
+                                    <p className="text-xs text-muted mt-1">Yüklemezseniz videonun içinden otomatik kapak oluşturulur.</p>
+                                </div>
+                            )}
 
                             {formData.media_type === 'video' && (
                                 <div>
