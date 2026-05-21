@@ -90,10 +90,10 @@ const HeroAdminPage = () => {
     const token = localStorage.getItem('viva_admin_token');
     const fd = new FormData();
     fd.append('file', file);
-    fd.append('type', accept === 'video' ? 'video' : 'image');
+    fd.append('folder', accept === 'video' ? 'videos' : 'hero');
 
     try {
-      const res = await fetch('/api/gallery/upload.php', {
+      const res = await fetch('/api/shared/upload_file.php', {
         method: 'POST',
         headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: fd,

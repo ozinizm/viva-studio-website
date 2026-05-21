@@ -167,4 +167,4 @@ CREATE TABLE IF NOT EXISTS activity_logs (
 -- Initial Admin Seed (admin@vivastudio.com / VivaAdmin2026!)
 -- Hash generated for password
 INSERT IGNORE INTO admin_users (email, password_hash, full_name, role) 
-VALUES ('admin@vivastudio.com', '$2y$10$wN1k6TzL/aWw8a.h1YVfQ.f.7rL.5v4Xm1zU3sVwUuY4YpQJ6v9O', 'Admin', 'admin');
+VALUES ('admin@vivastudio.com', '$2y$10$lyraS6Mv5XGLM.M8/5i41.Bz8eM7DjUlO.WEpijLdO8hF13TGztxm', 'Admin', 'admin');
