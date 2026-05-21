@@ -62,12 +62,12 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
-  const heroTitle = settings.hero_title || 'Bedenini Güçlendir,\nHayatını Dönüştür';
-  const heroDesc = settings.hero_description || 'Tuzla\'nın premium wellness stüdyosunda pilates, EMS, Vacu Activ ve G5 ile forma girin.';
-  const cta1Text = settings.cta1_text || 'Ücretsiz Danışma Al';
-  const cta1Link = settings.cta1_link || getWaUrl(settings.whatsapp, 'Merhaba, ücretsiz danışma almak istiyorum.');
-  const cta2Text = settings.cta2_text || 'Hizmetleri Keşfet';
-  const cta2Link = settings.cta2_link || '/hizmetler';
+  const heroTitle = settings.hero_title ?? 'Bedenini Güçlendir,\nHayatını Dönüştür';
+  const heroDesc = settings.hero_description ?? 'Tuzla\'nın premium wellness stüdyosunda pilates, EMS, Vacu Activ ve G5 ile forma girin.';
+  const cta1Text = settings.cta1_text ?? 'Ücretsiz Danışma Al';
+  const cta1Link = settings.cta1_link ?? getWaUrl(settings.whatsapp, 'Merhaba, ücretsiz danışma almak istiyorum.');
+  const cta2Text = settings.cta2_text ?? 'Hizmetleri Keşfet';
+  const cta2Link = settings.cta2_link ?? '/hizmetler';
 
   const isVideoActive = settings.hero_video_active === '1' || settings.hero_video_active === true;
   const mobileVideoActive = settings.hero_mobile_video_active === '1' || settings.hero_mobile_video_active === true;
@@ -152,30 +152,34 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
         </motion.div>
 
         {/* Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="text-white font-bold mb-6 leading-tight"
-          style={{
-            fontSize: 'clamp(2.2rem, 6vw, 4.5rem)',
-            letterSpacing: '-0.03em',
-            lineHeight: 1.1,
-            whiteSpace: 'pre-line',
-          }}
-        >
-          {heroTitle}
-        </motion.h1>
+        {heroTitle && (
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="text-white font-bold mb-6 leading-tight"
+            style={{
+              fontSize: 'clamp(2.2rem, 6vw, 4.5rem)',
+              letterSpacing: '-0.03em',
+              lineHeight: 1.1,
+              whiteSpace: 'pre-line',
+            }}
+          >
+            {heroTitle}
+          </motion.h1>
+        )}
 
         {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.45 }}
-          className="text-white/80 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed"
-        >
-          {heroDesc}
-        </motion.p>
+        {heroDesc && (
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.45 }}
+            className="text-white/80 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed"
+          >
+            {heroDesc}
+          </motion.p>
+        )}
 
         {/* Service Tags */}
         <motion.div
@@ -196,43 +200,49 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
         </motion.div>
 
         {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.55 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          {cta1Link.startsWith('http') ? (
-            <a href={cta1Link} target="_blank" rel="noreferrer" className="btn-gradient w-full sm:w-auto text-base">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/>
-              </svg>
-              {cta1Text}
-            </a>
-          ) : (
-            <Link to={cta1Link} className="btn-gradient w-full sm:w-auto text-base">{cta1Text}</Link>
-          )}
+        {(cta1Text || cta2Text) && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.55 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            {cta1Text && (
+              cta1Link.startsWith('http') ? (
+                <a href={cta1Link} target="_blank" rel="noreferrer" className="btn-gradient w-full sm:w-auto text-base">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/>
+                  </svg>
+                  {cta1Text}
+                </a>
+              ) : (
+                <Link to={cta1Link} className="btn-gradient w-full sm:w-auto text-base">{cta1Text}</Link>
+              )
+            )}
 
-          {cta2Link.startsWith('http') ? (
-            <a href={cta2Link} target="_blank" rel="noreferrer"
-              className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-base text-white transition-all duration-300"
-              style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)' }}>
-              {cta2Text}
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
-          ) : (
-            <Link to={cta2Link}
-              className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-base text-white transition-all duration-300"
-              style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)' }}>
-              {cta2Text}
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          )}
-        </motion.div>
+            {cta2Text && (
+              cta2Link.startsWith('http') ? (
+                <a href={cta2Link} target="_blank" rel="noreferrer"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-base text-white transition-all duration-300"
+                  style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)' }}>
+                  {cta2Text}
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              ) : (
+                <Link to={cta2Link}
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-base text-white transition-all duration-300"
+                  style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)' }}>
+                  {cta2Text}
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              )
+            )}
+          </motion.div>
+        )}
       </motion.div>
 
       {/* Scroll indicator */}
