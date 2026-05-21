@@ -53,6 +53,8 @@ interface HeroProps {
 
 const HeroSection: React.FC<HeroProps> = ({ settings }) => {
   const heroRef = useRef<HTMLElement>(null);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
@@ -94,6 +96,12 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
 
   const waLink = getWaUrl(settings.whatsapp, 'Merhaba, Viva Studio hakkında bilgi almak istiyorum.');
 
+  useEffect(() => {
+    if (showVideo && videoSrc && heroVideoRef.current) {
+      heroVideoRef.current.play().catch(e => console.log('Autoplay prevented:', e));
+    }
+  }, [showVideo, videoSrc]);
+
   return (
     <section
       ref={heroRef}
@@ -104,6 +112,8 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
       <motion.div className="absolute inset-0 z-0" style={{ y }}>
         {showVideo && videoSrc ? (
           <video
+            ref={heroVideoRef}
+            src={getMediaUrl(videoSrc)}
             autoPlay
             muted
             loop
@@ -111,9 +121,7 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
             poster={posterSrc ? getMediaUrl(posterSrc) : undefined}
             className="w-full h-full object-cover"
             preload="auto"
-          >
-            <source src={getMediaUrl(videoSrc)} type="video/mp4" />
-          </video>
+          />
         ) : posterSrc ? (
           <img
             src={getMediaUrl(posterSrc)}
