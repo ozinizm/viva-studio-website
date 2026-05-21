@@ -59,19 +59,19 @@ jobs:
           EOF
 
       - name: Deploy to cPanel via FTP
-  uses: SamKirkland/FTP-Deploy-Action@v4.3.6
-  with:
-    server: ${{ secrets.CPANEL_FTP_SERVER }}
-    username: ${{ secrets.CPANEL_FTP_USERNAME }}
-    password: ${{ secrets.CPANEL_FTP_PASSWORD }}
-    local-dir: ./release/
-    server-dir: ${{ secrets.CPANEL_FTP_TARGET_DIR }}
-    exclude: |
-      **/.git*
-      **/.git*/**
-      **/node_modules/**
-      **/.env
-      **/.env.*
-      api/config/config.php
-      uploads/**
-      **/*.log
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.CPANEL_FTP_SERVER }}
+          username: ${{ secrets.CPANEL_FTP_USERNAME }}
+          password: ${{ secrets.CPANEL_FTP_PASSWORD }}
+          local-dir: ./release/
+          server-dir: ${{ secrets.CPANEL_FTP_TARGET_DIR }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.env
+            **/.env.*
+            api/config/config.php
+            uploads/**
+            **/*.log
