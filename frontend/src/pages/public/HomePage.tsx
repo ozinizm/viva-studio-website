@@ -99,9 +99,32 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
   const waLink = getWaUrl(settings.whatsapp, 'Merhaba, Viva Studio hakkında bilgi almak istiyorum.');
 
   useEffect(() => {
-    if (showVideo && videoSrc && heroVideoRef.current) {
-      heroVideoRef.current.play().catch(e => console.log('Autoplay prevented:', e));
-    }
+    if (!showVideo || !videoSrc || !heroVideoRef.current) return;
+
+    const videoElement = heroVideoRef.current;
+    
+    // Play immediately on load if possible
+    videoElement.play().catch(e => console.log('Autoplay prevented:', e));
+
+    // Pause when scrolled out of view to save resources
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            videoElement.play().catch(() => {});
+          } else {
+            videoElement.pause();
+          }
+        });
+      },
+      { threshold: 0, rootMargin: '100px' }
+    );
+
+    observer.observe(videoElement);
+
+    return () => {
+      observer.disconnect();
+    };
   }, [showVideo, videoSrc]);
 
   return (
