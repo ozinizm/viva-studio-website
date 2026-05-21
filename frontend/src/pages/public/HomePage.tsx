@@ -152,10 +152,11 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
       </motion.div>
 
       {/* Content */}
-      <motion.div
-        className="relative z-10 text-center px-4 max-w-5xl mx-auto"
-        style={{ opacity }}
-      >
+      {heroTextActive && (
+        <motion.div
+          className="relative z-10 text-center px-4 max-w-5xl mx-auto pointer-events-none"
+          style={{ opacity }}
+        >
         {/* Pill badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -204,7 +205,7 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="flex flex-wrap items-center justify-center gap-2 mb-6 md:mb-10"
+            className="flex flex-wrap items-center justify-center gap-3 mb-8 md:mb-12 pointer-events-auto"
           >
             {heroTags.map((tag: string) => (
               <span
@@ -218,13 +219,13 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
           </motion.div>
         )}
 
-        {/* CTAs */}
-        {((cta1Active && cta1Text) || (cta2Active && cta2Text)) && (
+        {/* CTA Buttons */}
+        {(cta1Active || cta2Active) && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.55 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-2"
+            transition={{ duration: 0.7, delay: 0.7 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mx-auto max-w-xl pointer-events-auto"
           >
             {(cta1Active && cta1Text) && (
               cta1Link.startsWith('http') ? (
@@ -263,6 +264,7 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
           </motion.div>
         )}
       </motion.div>
+      )}
 
       {/* Scroll indicator */}
       <motion.div
