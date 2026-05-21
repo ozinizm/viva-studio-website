@@ -39,17 +39,13 @@ const LoginPage = () => {
         localStorage.setItem('viva_admin_token', data.token);
         navigate('/admin/dashboard', { replace: true });
         return;
+      } else {
+        const errData = await response.json().catch(() => ({}));
+        setError(errData.message || 'Geçersiz e-posta veya şifre.');
       }
     } catch (err) {
-      console.warn('Real API failed, falling back to mock auth', err);
-    }
-
-    // Mock Auth Fallback (Since backend might not be deployed yet)
-    if (email === 'admin@vivastudio.com' && password === 'VivaAdmin2026!') {
-      localStorage.setItem('viva_admin_token', 'mock_token');
-      navigate('/admin/dashboard', { replace: true });
-    } else {
-      setError('Geçersiz e-posta veya şifre.');
+      console.error('Login error:', err);
+      setError('Sunucuya bağlanılamadı. Lütfen daha sonra tekrar deneyin.');
     }
   };
 

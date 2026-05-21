@@ -71,9 +71,20 @@ const ContactPage = () => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // Extract maps embed ID if it's a share URL
-  const mapsEmbed = mapsUrl.includes('embed') ? mapsUrl
-    : `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12044!2d29.299!3d40.820!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cac1b7ae9a0879%3A0x3a7b2e83f3b90cae!2sTuzla%2C%20%C4%B0stanbul!5e0!3m2!1str!2str!4v1`;
+  let finalMapsEmbed = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12044!2d29.299!3d40.820!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cac1b7ae9a0879%3A0x3a7b2e83f3b90cae!2sTuzla%2C%20%C4%B0stanbul!5e0!3m2!1str!2str!4v1`;
+
+  if (mapsUrl) {
+    if (mapsUrl.includes('<iframe')) {
+      // User pasted the full HTML iframe tag from Google Maps
+      const srcMatch = mapsUrl.match(/src="([^"]+)"/);
+      if (srcMatch && srcMatch[1]) {
+        finalMapsEmbed = srcMatch[1];
+      }
+    } else if (mapsUrl.includes('embed')) {
+      // User pasted just the embed URL
+      finalMapsEmbed = mapsUrl;
+    }
+  }
 
   return (
     <>
@@ -336,7 +347,7 @@ const ContactPage = () => {
               {/* Map */}
               <div className="rounded-3xl overflow-hidden shadow-card h-64">
                 <iframe
-                  src={mapsEmbed}
+                  src={finalMapsEmbed}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}

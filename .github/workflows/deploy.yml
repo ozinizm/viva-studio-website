@@ -1,4 +1,4 @@
-name: Deploy to cPanel via FTP
+name: Deploy Viva Studio to cPanel
 
 on:
   push:
@@ -7,41 +7,71 @@ on:
 
 jobs:
   build-and-deploy:
+    name: Build and FTP Deploy
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
 
-      - name: Install Dependencies
+      - name: Install dependencies
         working-directory: ./frontend
-        run: npm ci || npm install
+        run: npm ci
 
-      - name: Build Project
+      - name: Build frontend
         working-directory: ./frontend
         run: npm run build
 
-      - name: Prepare Backend API for Deployment
-        run: cp -r backend/api frontend/dist/api
+      - name: Prepare release folder
+        run: |
+          rm -rf release
+          mkdir -p release
+          cp -R frontend/dist/* release/
+          cp -R backend/api release/api
 
-      - name: Sync FTP Deployment
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Add SPA .htaccess
+        run: |
+          cat > release/.htaccess <<'EOF'
+          <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteBase /
+
+            RewriteCond %{REQUEST_URI} ^/api/
+            RewriteRule ^ - [L]
+
+            RewriteCond %{REQUEST_FILENAME} -f [OR]
+            RewriteCond %{REQUEST_FILENAME} -d
+            RewriteRule ^ - [L]
+
+            RewriteRule . /index.html [L]
+          </IfModule>
+
+          <IfModule mod_headers.c>
+            Header set X-Content-Type-Options "nosniff"
+            Header set X-Frame-Options "SAMEORIGIN"
+            Header set Referrer-Policy "strict-origin-when-cross-origin"
+          </IfModule>
+          EOF
+
+      - name: Deploy to cPanel via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
-          server: ${{ secrets.CPANEL_FTP_SERVER }}
-          username: ${{ secrets.CPANEL_FTP_USERNAME }}
-          password: ${{ secrets.CPANEL_FTP_PASSWORD }}
-          server-dir: ${{ secrets.CPANEL_FTP_TARGET_DIR }}
-          local-dir: ./frontend/dist/
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./release/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/.env
+            **/.env.*
             api/config/config.php
-            **/api/config/config.php
             uploads/**
-            **/uploads/**
+            **/*.log

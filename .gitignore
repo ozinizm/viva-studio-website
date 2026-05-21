@@ -9,5 +9,5 @@ node_modules/
 .idea/
 
 dist/
-!frontend/dist/
-!frontend/dist/**
+release/
+backend/api/config/config.php
