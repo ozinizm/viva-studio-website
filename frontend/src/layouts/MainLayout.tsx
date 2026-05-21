@@ -477,7 +477,13 @@ const Footer: React.FC<{ settings: Settings }> = ({ settings }) => {
 
         <div className="pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-white/40">
           <p>© {new Date().getFullYear()} {settings.site_name || 'Viva Studio Tuzla'}. {settings.footer_text || 'Tüm hakları saklıdır.'}</p>
-          <p>Tuzla | İstanbul · Pilates · EMS · Vacu Activ · G5</p>
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3">
+            <p>Tuzla | İstanbul · Pilates · EMS · Vacu Activ · G5</p>
+            <span className="hidden md:block opacity-30">|</span>
+            <a href="https://fikircreative.com/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors font-medium">
+              Design by Fikir Creative
+            </a>
+          </div>
         </div>
       </div>
     </footer>
