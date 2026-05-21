@@ -81,6 +81,8 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
   const heroTags = tagsStr.split(',').map((t: string) => t.trim()).filter(Boolean);
 
   const heroTextActive = settings.hero_text_active === undefined || settings.hero_text_active === '1' || settings.hero_text_active === true;
+  const heroButtonsActive = settings.hero_buttons_active === undefined || settings.hero_buttons_active === '1' || settings.hero_buttons_active === true;
+  const heroBadgeText = settings.hero_badge_text !== undefined ? settings.hero_badge_text : 'Tuzla Premium Wellness Studio';
 
   // Media selection logic
   const desktopVideo = settings.hero_video_url;
@@ -181,16 +183,18 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
           style={{ opacity }}
         >
         {/* Pill badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-lime border border-lime/30 mb-6"
-          style={{ background: 'rgba(168, 224, 99, 0.12)' }}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />
-          Tuzla Premium Wellness Studio
-        </motion.div>
+        {heroBadgeText && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-lime border border-lime/30 mb-6"
+            style={{ background: 'rgba(168, 224, 99, 0.12)' }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />
+            {heroBadgeText}
+          </motion.div>
+        )}
 
         {/* Title */}
         {heroTitle && (
@@ -242,13 +246,18 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
           </motion.div>
         )}
 
-        {/* CTA Buttons */}
-        {(cta1Active || cta2Active) && (
+        {/* CTAs */}
+      </motion.div>
+      )}
+
+      {/* Buttons (can be active independently of text) */}
+      {heroButtonsActive && ((cta1Active && cta1Text) || (cta2Active && cta2Text)) && (
+        <div className="absolute bottom-16 sm:bottom-24 left-0 right-0 z-20 px-4 flex justify-center pointer-events-none">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.7 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mx-auto max-w-xl pointer-events-auto"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl pointer-events-auto"
           >
             {(cta1Active && cta1Text) && (
               cta1Link.startsWith('http') ? (
@@ -285,8 +294,7 @@ const HeroSection: React.FC<HeroProps> = ({ settings }) => {
               )
             )}
           </motion.div>
-        )}
-      </motion.div>
+        </div>
       )}
 
       {/* Scroll indicator */}
