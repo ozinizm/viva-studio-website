@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 interface SEOProps {
   title?: string;
   description?: string;
@@ -8,54 +7,107 @@ interface SEOProps {
   ogTitle?: string;
   ogDescription?: string;
   ogImage?: string;
+  ogType?: 'website' | 'article';
   noIndex?: boolean;
+  schemaType?: 'LocalBusiness' | 'Service' | 'Organization';
 }
 
 const SEO: React.FC<SEOProps> = ({
-  title = "Viva Studio Tuzla | Reformer Pilates, EMS ve Wellness Stüdyosu",
-  description = "Tuzla Viva Studio'da reformer pilates, EMS, Vacu Active, G5 masajı ve vücut şekillendirme hizmetleriyle sağlıklı dönüşüm yolculuğunuza başlayın.",
+  title = 'Viva Studio Tuzla | Pilates, EMS, Vacu Activ, G5 — Premium Wellness',
+  description = 'Tuzla\'nın premium wellness stüdyosu. Reformer pilates, EMS antrenmanı, Vacu Activ ve G5 masaj ile bedeninizi güçlendirin ve forma girin.',
   canonical,
   ogTitle,
   ogDescription,
-  ogImage = "https://vivastudiopilates.com/og-image.jpg",
+  ogImage = '/og-image.jpg',
+  ogType = 'website',
   noIndex = false,
+  schemaType = 'LocalBusiness',
 }) => {
   React.useEffect(() => {
     document.title = title;
 
-    const setMetaTag = (name: string, content: string, isProperty = false) => {
-      const attribute = isProperty ? 'property' : 'name';
-      let tag = document.querySelector(`meta[${attribute}="${name}"]`);
+    const setMeta = (name: string, content: string, isProperty = false) => {
+      const attr = isProperty ? 'property' : 'name';
+      let tag = document.querySelector<HTMLMetaElement>(`meta[${attr}="${name}"]`);
       if (!tag) {
         tag = document.createElement('meta');
-        tag.setAttribute(attribute, name);
+        tag.setAttribute(attr, name);
         document.head.appendChild(tag);
       }
       tag.setAttribute('content', content);
     };
 
-    setMetaTag('description', description);
-    
-    if (ogTitle) setMetaTag('og:title', ogTitle, true);
-    if (ogDescription) setMetaTag('og:description', ogDescription, true);
-    if (ogImage) setMetaTag('og:image', ogImage, true);
-    
-    if (noIndex) {
-      setMetaTag('robots', 'noindex, nofollow');
-    } else {
-      setMetaTag('robots', 'index, follow');
-    }
+    // Core
+    setMeta('description', description);
+    setMeta('robots', noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large');
+    setMeta('theme-color', '#2FB344');
 
+    // Open Graph
+    setMeta('og:type', ogType, true);
+    setMeta('og:title', ogTitle || title, true);
+    setMeta('og:description', ogDescription || description, true);
+    setMeta('og:image', ogImage.startsWith('http') ? ogImage : `${window.location.origin}${ogImage}`, true);
+    setMeta('og:url', canonical || window.location.href, true);
+    setMeta('og:locale', 'tr_TR', true);
+    setMeta('og:site_name', 'Viva Studio Tuzla', true);
+
+    // Twitter Card
+    setMeta('twitter:card', 'summary_large_image');
+    setMeta('twitter:title', ogTitle || title);
+    setMeta('twitter:description', ogDescription || description);
+
+    // Canonical
     if (canonical) {
-      let link = document.querySelector(`link[rel="canonical"]`);
+      let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
       if (!link) {
         link = document.createElement('link');
         link.setAttribute('rel', 'canonical');
         document.head.appendChild(link);
       }
-      link.setAttribute('href', canonical);
+      link.href = canonical;
     }
-  }, [title, description, canonical, ogTitle, ogDescription, ogImage, noIndex]);
+
+    // Structured Data (LocalBusiness)
+    if (!noIndex) {
+      const schema = {
+        '@context': 'https://schema.org',
+        '@type': schemaType || 'LocalBusiness',
+        name: 'Viva Studio Tuzla',
+        description: 'Tuzla\'nın premium wellness stüdyosu. Pilates, EMS, Vacu Activ ve G5 hizmetleri.',
+        url: 'https://vivastudiotuzla.com',
+        telephone: '+905365266936',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Tuzla',
+          addressRegion: 'İstanbul',
+          addressCountry: 'TR',
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: 40.8186,
+          longitude: 29.3004,
+        },
+        openingHoursSpecification: [
+          { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'], opens: '09:00', closes: '21:00' },
+          { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '09:00', closes: '19:00' },
+        ],
+        image: ogImage.startsWith('http') ? ogImage : `${window.location.origin}${ogImage}`,
+        priceRange: '₺₺',
+        currenciesAccepted: 'TRY',
+        paymentAccepted: 'Cash, Credit Card',
+        areaServed: 'Tuzla, İstanbul',
+      };
+
+      let schemaScript = document.getElementById('structured-data-schema');
+      if (!schemaScript) {
+        schemaScript = document.createElement('script');
+        schemaScript.id = 'structured-data-schema';
+        schemaScript.setAttribute('type', 'application/ld+json');
+        document.head.appendChild(schemaScript);
+      }
+      schemaScript.textContent = JSON.stringify(schema);
+    }
+  }, [title, description, canonical, ogTitle, ogDescription, ogImage, ogType, noIndex, schemaType]);
 
   return null;
 };
