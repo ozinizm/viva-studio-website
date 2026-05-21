@@ -201,7 +201,15 @@ export default function GalleryAdminPage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="form-label">Kategori</label>
-                                    <input type="text" value={formData.category || ''} onChange={e => setFormData({...formData, category: e.target.value})} className="form-input" placeholder="Genel, Stüdyo..." />
+                                    <select value={formData.category || 'Genel'} onChange={e => setFormData({...formData, category: e.target.value})} className="form-input">
+                                        <option value="Genel">Genel</option>
+                                        <option value="Pilates">Pilates</option>
+                                        <option value="EMS">EMS</option>
+                                        <option value="Vacu Activ">Vacu Activ</option>
+                                        <option value="G5">G5</option>
+                                        <option value="Studio">Studio</option>
+                                        <option value="Diğer">Diğer</option>
+                                    </select>
                                 </div>
                                 <div>
                                     <label className="form-label">Sıralama</label>
