@@ -105,7 +105,7 @@ const HeroAdminPage = () => {
   const handleUpload = async (file: File, fieldName: string, accept: 'image' | 'video' | 'both') => {
     setUploadingField(fieldName);
     setError('');
-    const token = localStorage.getItem('viva_admin_token');
+    const token = sessionStorage.getItem('viva_admin_token');
     const fd = new FormData();
     fd.append('file', file);
     fd.append('folder', accept === 'video' ? 'videos' : 'hero');
@@ -134,7 +134,7 @@ const HeroAdminPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(localStorage.getItem('viva_admin_token') ? { Authorization: `Bearer ${localStorage.getItem('viva_admin_token')}` } : {}),
+          ...(sessionStorage.getItem('viva_admin_token') ? { Authorization: `Bearer ${sessionStorage.getItem('viva_admin_token')}` } : {}),
         },
         body: JSON.stringify(form),
       });

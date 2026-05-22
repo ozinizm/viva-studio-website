@@ -178,12 +178,30 @@ const GalleryPage = () => {
                   >
                     {item.media_type === 'video' ? (
                       <>
-                        <img
-                          data-src={item.poster_url ? getMediaUrl(item.poster_url) : 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=800'}
-                          src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
-                          alt={item.title || 'Video'}
-                          className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
+                        {item.poster_url ? (
+                          <img
+                            data-src={getMediaUrl(item.poster_url)}
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            alt={item.title || 'Video'}
+                            className={`w-full object-cover transition-transform duration-500 group-hover:scale-105 ${item.orientation === 'vertical' ? 'aspect-[9/16]' : 'aspect-video'}`}
+                          />
+                        ) : (
+                          <video
+                            src={getMediaUrl(item.video_url || item.image_url || item.url)}
+                            className={`w-full object-cover transition-transform duration-500 group-hover:scale-105 ${item.orientation === 'vertical' ? 'aspect-[9/16]' : 'aspect-video'}`}
+                            muted
+                            playsInline
+                            onMouseEnter={(e) => {
+                              const v = e.target as HTMLVideoElement;
+                              v.play().catch(() => {});
+                            }}
+                            onMouseLeave={(e) => {
+                              const v = e.target as HTMLVideoElement;
+                              v.pause();
+                              v.currentTime = 0;
+                            }}
+                          />
+                        )}
                         <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
                           <div className="w-12 h-12 rounded-full bg-white/25 backdrop-blur-sm flex items-center justify-center border border-white/40">
                             <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
@@ -241,7 +259,7 @@ const GalleryPage = () => {
               onClick={e => e.stopPropagation()}
             >
               {lightbox.media_type === 'video' ? (
-                <video controls autoPlay playsInline className="w-full max-h-[85vh] rounded-2xl bg-black">
+                <video controls autoPlay playsInline className="w-full max-h-[85vh] rounded-2xl bg-black" poster={lightbox.poster_url ? getMediaUrl(lightbox.poster_url) : ''}>
                   <source src={getMediaUrl(lightbox.video_url || lightbox.image_url || lightbox.url)} />
                 </video>
               ) : (

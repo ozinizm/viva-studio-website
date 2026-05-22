@@ -9,7 +9,7 @@ export default function GalleryAdminPage() {
     const [showModal, setShowModal] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
-    const [formData, setFormData] = useState<any>({ media_type: 'image', category: 'Genel', sort_order: 0, is_active: 1 });
+    const [formData, setFormData] = useState<any>({ media_type: 'image', category: 'Genel', sort_order: 0, is_active: 1, orientation: 'horizontal' });
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const loadData = () => {
@@ -58,6 +58,7 @@ export default function GalleryAdminPage() {
         
         sendFormData.append('title', formData.title || '');
         sendFormData.append('category', formData.category || 'Genel');
+        sendFormData.append('orientation', formData.orientation || 'horizontal');
         sendFormData.append('alt_text', formData.alt_text || '');
         sendFormData.append('sort_order', String(formData.sort_order || 0));
         sendFormData.append('is_active', String(formData.is_active ? 1 : 0));
@@ -66,7 +67,7 @@ export default function GalleryAdminPage() {
         setMessage({ type: 'info', text: 'Yükleniyor... (Dosya boyutuna göre 1-2 dakika sürebilir, lütfen bekleyin)' });
 
         try {
-            const token = localStorage.getItem('viva_admin_token') || '';
+            const token = sessionStorage.getItem('viva_admin_token') || '';
             const res = await fetch('/api/gallery/upload.php', {
                 method: 'POST',
                 headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
@@ -76,7 +77,7 @@ export default function GalleryAdminPage() {
             
             if (res.ok && result.success) {
                 setShowModal(false);
-                setFormData({ media_type: 'image', category: 'Genel', sort_order: 0, is_active: 1 });
+                setFormData({ media_type: 'image', category: 'Genel', sort_order: 0, is_active: 1, orientation: 'horizontal' });
                 setMessage({ type: '', text: '' });
                 loadData();
             } else {
@@ -97,7 +98,7 @@ export default function GalleryAdminPage() {
                     <p className="text-muted text-sm mt-1">Sitede görünecek fotoğraf ve videoları buradan yönetin.</p>
                 </div>
                 <button onClick={() => {
-                    setFormData({ media_type: 'image', category: 'Genel', sort_order: 0, is_active: 1 });
+                    setFormData({ media_type: 'image', category: 'Genel', sort_order: 0, is_active: 1, orientation: 'horizontal' });
                     setShowModal(true);
                 }} className="btn-primary py-2.5">
                     + Yeni Medya Ekle
@@ -124,11 +125,13 @@ export default function GalleryAdminPage() {
                             transition={{ delay: i * 0.05 }}
                             className="group bg-white rounded-3xl overflow-hidden shadow-card relative border border-sage/30 flex flex-col"
                         >
-                            <div className="relative aspect-square">
+                            <div className={`relative ${item.orientation === 'vertical' ? 'aspect-[9/16]' : 'aspect-video'}`}>
                                 {item.media_type === 'video' ? (
-                                    <div className="w-full h-full bg-forest flex flex-col items-center justify-center text-white relative">
-                                        {item.image_url ? (
-                                            <video src={getMediaUrl(item.image_url)} className="w-full h-full object-cover opacity-80" muted playsInline />
+                                    <div className="w-full h-full bg-forest flex flex-col items-center justify-center text-white relative overflow-hidden">
+                                        {item.poster_url ? (
+                                            <img src={getMediaUrl(item.poster_url)} className="w-full h-full object-cover" alt="Poster" />
+                                        ) : item.image_url || item.video_url ? (
+                                            <video src={getMediaUrl(item.video_url || item.image_url)} className="w-full h-full object-cover opacity-80" muted playsInline />
                                         ) : (
                                             <>
                                                 <span className="text-4xl mb-2">🎬</span>
@@ -202,6 +205,16 @@ export default function GalleryAdminPage() {
                                 <div>
                                     <label className="form-label">Dış Video URL (Opsiyonel)</label>
                                     <input type="text" value={formData.video_url || ''} onChange={e => setFormData({...formData, video_url: e.target.value})} className="form-input" placeholder="https://youtube.com/... veya mp4 linki" />
+                                </div>
+                            )}
+
+                            {formData.media_type === 'video' && (
+                                <div>
+                                    <label className="form-label">Video Yönü</label>
+                                    <select value={formData.orientation} className="form-input" onChange={(e) => setFormData({...formData, orientation: e.target.value})}>
+                                        <option value="horizontal">Yatay (16:9)</option>
+                                        <option value="vertical">Dikey (9:16)</option>
+                                    </select>
                                 </div>
                             )}
 

@@ -139,7 +139,7 @@ const AdminLayout = () => {
   }, [location]);
 
   const handleLogout = () => {
-    localStorage.removeItem('viva_admin_token');
+    sessionStorage.removeItem('viva_admin_token');
     navigate('/admin/login', { replace: true });
   };
 

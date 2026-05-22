@@ -17,7 +17,7 @@ const LoginPage = () => {
       setError('Oturum süresi doldu, lütfen tekrar giriş yapın.');
     }
 
-    if (localStorage.getItem('viva_admin_token')) {
+    if (sessionStorage.getItem('viva_admin_token')) {
       navigate('/admin/dashboard', { replace: true });
     }
   }, [navigate]);
@@ -36,7 +36,7 @@ const LoginPage = () => {
       
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('viva_admin_token', data.token);
+        sessionStorage.setItem('viva_admin_token', data.token);
         navigate('/admin/dashboard', { replace: true });
         return;
       } else {

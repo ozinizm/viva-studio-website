@@ -46,8 +46,8 @@ export default function SettingsPage() {
 
         setMessage({ type: 'info', text: 'Dosya yükleniyor...' });
         try {
-            const token = localStorage.getItem('viva_admin_token') || '';
-            const res = await fetch('/api/shared/upload_file.php', {
+            const token = sessionStorage.getItem('viva_admin_token') || '';
+            const res = await fetch('/api/settings/upload.php', {
                 method: 'POST',
                 headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
                 body: fd

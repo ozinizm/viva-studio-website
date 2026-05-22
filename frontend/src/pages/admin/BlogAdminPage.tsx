@@ -60,7 +60,7 @@ export default function BlogAdminPage() {
 
         setMessage('Dosya yükleniyor...');
         try {
-            const token = localStorage.getItem('viva_admin_token') || '';
+            const token = sessionStorage.getItem('viva_admin_token') || '';
             const res = await fetch((import.meta.env.PROD ? '/api' : 'http://localhost/api') + '/shared/upload_file.php', {
                 method: 'POST',
                 headers: {
