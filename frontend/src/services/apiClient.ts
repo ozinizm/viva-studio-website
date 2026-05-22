@@ -4,7 +4,7 @@ const API_BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost/api';
 
 export const apiClient = {
     async request(endpoint: string, options: RequestInit = {}) {
-        const token = localStorage.getItem('viva_admin_token');
+        const token = sessionStorage.getItem('viva_admin_token');
         const headers = {
             'Content-Type': 'application/json',
             ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
@@ -17,7 +17,7 @@ export const apiClient = {
             
             if (!response.ok || (data && data.success === false)) {
                 if (response.status === 401) {
-                    localStorage.removeItem('viva_admin_token');
+                    sessionStorage.removeItem('viva_admin_token');
                     // Prevent infinite loops if already on login page
                     if (!window.location.pathname.includes('/admin/login')) {
                         window.location.href = '/admin/login?expired=true';

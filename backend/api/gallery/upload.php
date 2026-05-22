@@ -31,14 +31,21 @@ try {
     } catch (PDOException $e) {
         // Ignore if column already exists
     }
+    // Auto-migrate orientation column if it doesn't exist
+    try {
+        $db->exec("ALTER TABLE gallery_items ADD COLUMN orientation VARCHAR(20) DEFAULT 'horizontal'");
+    } catch (PDOException $e) {
+        // Ignore if column already exists
+    }
     
     $media_type = $_POST['media_type'] ?? 'image';
     $video_url = $_POST['video_url'] ?? '';
+    $orientation = $_POST['orientation'] ?? 'horizontal';
     
     // Check if columns exist, if not gracefully fall back to older query
     try {
-        $stmt = $db->prepare('INSERT INTO gallery_items (title, category, image_url, video_url, poster_url, media_type, alt_text, sort_order) VALUES (?,?,?,?,?,?,?,?)');
-        $stmt->execute([$_POST['title'] ?? '', $_POST['category'] ?? '', $path, $video_url, $poster_path, $media_type, $_POST['alt_text'] ?? '', $_POST['sort_order'] ?? 0]);
+        $stmt = $db->prepare('INSERT INTO gallery_items (title, category, image_url, video_url, poster_url, media_type, alt_text, sort_order, orientation) VALUES (?,?,?,?,?,?,?,?,?)');
+        $stmt->execute([$_POST['title'] ?? '', $_POST['category'] ?? '', $path, $video_url, $poster_path, $media_type, $_POST['alt_text'] ?? '', $_POST['sort_order'] ?? 0, $orientation]);
     } catch (PDOException $ex) {
         if ($ex->getCode() == '42S22') { // Column not found
             try {
