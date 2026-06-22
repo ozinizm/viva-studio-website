@@ -36,7 +36,7 @@ const ContactPage = () => {
 
   const phone = settings.phone || '0536 526 69 36';
   const whatsapp = settings.whatsapp || '05365266936';
-  const email = settings.email || 'info@vivastudiotuzla.com';
+  const email = settings.email || 'info@vivastudiopilates.com';
   const address = settings.address || 'Tuzla, İstanbul';
   const hours = settings.working_hours || 'Hafta içi 09:00 - 21:00';
   const mapsUrl = settings.google_maps_url || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24088!2d29.3!3d40.8!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cac0f8e4b3a7fd%3A0x7e5b2f3a1b9d!2sTuzla%2C+İstanbul!5e0!3m2!1str!2str!4v1';

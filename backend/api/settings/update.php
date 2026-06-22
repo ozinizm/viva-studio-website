@@ -9,9 +9,23 @@ if(!is_array($data)) sendError('Invalid data');
 try {
     $db = Database::getInstance();
     
-    // Otomatik charset düzeltmesi (Canlı sunucuda latin1 kalan tabloları UTF-8 yapar)
+    // Otomatik charset düzeltmesi (Canlı sunucuda latin1 kalan tüm tabloları UTF-8 yapar)
     try {
-        $tables = ['admin_users', 'site_settings', 'services']; // gallery, hero_sections etc if exist
+        $tables = [
+            'admin_users', 
+            'site_settings', 
+            'services', 
+            'hero_sections', 
+            'reservations', 
+            'contact_requests', 
+            'gallery_items', 
+            'blog_posts', 
+            'campaigns', 
+            'faqs', 
+            'testimonials', 
+            'seo_settings', 
+            'activity_logs'
+        ];
         foreach ($tables as $table) {
             $db->exec("ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
         }

@@ -346,7 +346,7 @@ const Footer: React.FC<{ settings: Settings }> = ({ settings }) => {
 
   const phone = settings.phone || '0536 526 69 36';
   const whatsapp = settings.whatsapp || '05365266936';
-  const email = settings.email || 'info@vivastudiotuzla.com';
+  const email = settings.email || 'info@vivastudiopilates.com';
   const address = settings.address || 'Tuzla, İstanbul';
   const hours = settings.working_hours || 'Hafta içi 09:00 - 21:00';
 

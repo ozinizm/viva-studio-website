@@ -23,10 +23,12 @@ import ContactRequestsPage from './pages/admin/ContactRequestsPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import LoginPage from './pages/admin/LoginPage';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import ScrollToTop from './components/common/ScrollToTop';
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<MainLayout />}>

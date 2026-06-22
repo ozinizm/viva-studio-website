@@ -57,15 +57,14 @@ const SEO: React.FC<SEOProps> = ({
     setMeta('twitter:description', ogDescription || description);
 
     // Canonical
-    if (canonical) {
-      let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-      if (!link) {
-        link = document.createElement('link');
-        link.setAttribute('rel', 'canonical');
-        document.head.appendChild(link);
-      }
-      link.href = canonical;
+    const finalCanonical = canonical || window.location.href.split('?')[0];
+    let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
     }
+    link.href = finalCanonical;
 
     // Structured Data (LocalBusiness)
     if (!noIndex) {
@@ -74,7 +73,7 @@ const SEO: React.FC<SEOProps> = ({
         '@type': schemaType || 'LocalBusiness',
         name: 'Viva Studio Tuzla',
         description: 'Tuzla\'nın premium wellness stüdyosu. Pilates, EMS, Vacu Activ ve G5 hizmetleri.',
-        url: 'https://vivastudiotuzla.com',
+        url: 'https://vivastudiopilates.com',
         telephone: '+905365266936',
         address: {
           '@type': 'PostalAddress',

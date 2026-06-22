@@ -2,4 +2,20 @@ User-agent: *
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://vivastudiopilates.com/api/sitemap.php
+# Allow major AI search bots to scan public content
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://vivastudiopilates.com/sitemap.xml
