@@ -41,6 +41,9 @@ jobs:
             RewriteEngine On
             RewriteBase /
 
+            # Dynamic Sitemap redirect
+            RewriteRule ^sitemap\.xml$ /api/sitemap.php [L]
+
             RewriteCond %{REQUEST_URI} ^/api/
             RewriteRule ^ - [L]
 
