@@ -8,6 +8,7 @@ $data = json_decode(file_get_contents('php://input'));
 if(!isset($data->id)) sendError('ID required');
 try {
     $db = Database::getInstance();
+    Database::ensureUtf8mb4Schema(['services']);
     try {
         $stmt = $db->prepare('UPDATE services SET title=?, slug=?, short_description=?, detail_description=?, category=?, image_url=?, video_url=?, suitable_for=?, benefits=?, process=?, faq=?, sort_order=?, seo_title=?, seo_description=?, is_active=? WHERE id=?');
         $stmt->execute([

@@ -55,26 +55,13 @@ export default function ServicesAdminPage() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const fd = new FormData();
-        fd.append('file', file);
-        fd.append('folder', 'services');
-
         setMessage({ type: 'info', text: 'Dosya yükleniyor...' });
         try {
-            const token = sessionStorage.getItem('viva_admin_token') || '';
-            const res = await fetch('/api/services/upload.php', {
-                method: 'POST',
-                headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-                body: fd
-            });
-            const result = await res.json();
-            if (res.ok && result.success) {
-                setFormData((prev: any) => ({ ...prev, [fieldName]: result.url }));
-                setMessage({ type: 'success', text: 'Dosya başarıyla yüklendi.' });
-                setTimeout(() => setMessage({ type: '', text: '' }), 3000);
-            } else {
-                setMessage({ type: 'error', text: 'Yükleme hatası: ' + (result.message || 'Başarısız') });
-            }
+            const folder = fieldName === 'video_url' ? 'videos' : 'services';
+            const result = await apiClient.uploadFile(file, folder);
+            setFormData((prev: any) => ({ ...prev, [fieldName]: result.url }));
+            setMessage({ type: 'success', text: 'Dosya başarıyla yüklendi.' });
+            setTimeout(() => setMessage({ type: '', text: '' }), 3000);
         } catch (err: any) {
             setMessage({ type: 'error', text: 'Hata: ' + err.message });
         }

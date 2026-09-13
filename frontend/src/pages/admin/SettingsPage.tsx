@@ -40,26 +40,13 @@ export default function SettingsPage() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const fd = new FormData();
-        fd.append('file', file);
-        fd.append('folder', type === 'video' ? 'videos' : 'settings');
-
         setMessage({ type: 'info', text: 'Dosya yükleniyor...' });
         try {
-            const token = sessionStorage.getItem('viva_admin_token') || '';
-            const res = await fetch('/api/settings/upload.php', {
-                method: 'POST',
-                headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-                body: fd
-            });
-            const data = await res.json();
-            if (res.ok && data.url) {
-                setSettings((prev: any) => ({ ...prev, [fieldName]: data.url }));
-                setMessage({ type: 'success', text: 'Dosya başarıyla yüklendi.' });
-                setTimeout(() => setMessage({ type: '', text: '' }), 3000);
-            } else {
-                setMessage({ type: 'error', text: 'Yükleme hatası: ' + (data.message || 'Başarısız') });
-            }
+            const folder = type === 'video' ? 'videos' : 'settings';
+            const data = await apiClient.uploadFile(file, folder);
+            setSettings((prev: any) => ({ ...prev, [fieldName]: data.url }));
+            setMessage({ type: 'success', text: 'Dosya başarıyla yüklendi.' });
+            setTimeout(() => setMessage({ type: '', text: '' }), 3000);
         } catch (err: any) {
             setMessage({ type: 'error', text: 'Hata: ' + err.message });
         }

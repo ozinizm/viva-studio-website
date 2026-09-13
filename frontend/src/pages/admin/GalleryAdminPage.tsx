@@ -70,7 +70,10 @@ export default function GalleryAdminPage() {
             const token = sessionStorage.getItem('viva_admin_token') || '';
             const res = await fetch('/api/gallery/upload.php', {
                 method: 'POST',
-                headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+                headers: {
+                    'Accept': 'application/json',
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
                 body: sendFormData
             });
             const result = await res.json();

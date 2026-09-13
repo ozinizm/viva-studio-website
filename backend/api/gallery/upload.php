@@ -24,6 +24,7 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 }
 try {
     $db = Database::getInstance();
+    Database::ensureUtf8mb4Schema(['gallery_items']);
     
     // Auto-migrate poster_url column if it doesn't exist
     try {
@@ -41,19 +42,20 @@ try {
     $media_type = $_POST['media_type'] ?? 'image';
     $video_url = $_POST['video_url'] ?? '';
     $orientation = $_POST['orientation'] ?? 'horizontal';
+    $is_active = isset($_POST['is_active']) ? (int) $_POST['is_active'] : 1;
     
     // Check if columns exist, if not gracefully fall back to older query
     try {
-        $stmt = $db->prepare('INSERT INTO gallery_items (title, category, image_url, video_url, poster_url, media_type, alt_text, sort_order, orientation) VALUES (?,?,?,?,?,?,?,?,?)');
-        $stmt->execute([$_POST['title'] ?? '', $_POST['category'] ?? '', $path, $video_url, $poster_path, $media_type, $_POST['alt_text'] ?? '', $_POST['sort_order'] ?? 0, $orientation]);
+        $stmt = $db->prepare('INSERT INTO gallery_items (title, category, image_url, video_url, poster_url, media_type, alt_text, sort_order, orientation, is_active) VALUES (?,?,?,?,?,?,?,?,?,?)');
+        $stmt->execute([$_POST['title'] ?? '', $_POST['category'] ?? '', $path, $video_url, $poster_path, $media_type, $_POST['alt_text'] ?? '', $_POST['sort_order'] ?? 0, $orientation, $is_active]);
     } catch (PDOException $ex) {
         if ($ex->getCode() == '42S22') { // Column not found
             try {
-                $stmt = $db->prepare('INSERT INTO gallery_items (title, category, image_url, video_url, media_type, alt_text, sort_order) VALUES (?,?,?,?,?,?,?)');
-                $stmt->execute([$_POST['title'] ?? '', $_POST['category'] ?? '', $path, $video_url, $media_type, $_POST['alt_text'] ?? '', $_POST['sort_order'] ?? 0]);
+                $stmt = $db->prepare('INSERT INTO gallery_items (title, category, image_url, video_url, media_type, alt_text, sort_order, is_active) VALUES (?,?,?,?,?,?,?,?)');
+                $stmt->execute([$_POST['title'] ?? '', $_POST['category'] ?? '', $path, $video_url, $media_type, $_POST['alt_text'] ?? '', $_POST['sort_order'] ?? 0, $is_active]);
             } catch (PDOException $e) {
-                $stmt = $db->prepare('INSERT INTO gallery_items (title, category, image_url, alt_text, sort_order) VALUES (?,?,?,?,?)');
-                $stmt->execute([$_POST['title'] ?? '', $_POST['category'] ?? '', $path, $_POST['alt_text'] ?? '', $_POST['sort_order'] ?? 0]);
+                $stmt = $db->prepare('INSERT INTO gallery_items (title, category, image_url, alt_text, sort_order, is_active) VALUES (?,?,?,?,?,?)');
+                $stmt->execute([$_POST['title'] ?? '', $_POST['category'] ?? '', $path, $_POST['alt_text'] ?? '', $_POST['sort_order'] ?? 0, $is_active]);
             }
         } else {
             throw $ex;

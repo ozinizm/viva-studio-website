@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 const API_BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost/api';
 
 export const apiClient = {
@@ -7,6 +5,7 @@ export const apiClient = {
         const token = sessionStorage.getItem('viva_admin_token');
         const headers = {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
             ...options.headers,
         };
@@ -40,5 +39,28 @@ export const apiClient = {
     get(endpoint: string) { return this.request(endpoint); },
     post(endpoint: string, body: any) { return this.request(endpoint, { method: 'POST', body: JSON.stringify(body) }); },
     put(endpoint: string, body: any) { return this.request(endpoint, { method: 'PUT', body: JSON.stringify(body) }); },
-    delete(endpoint: string, body: any) { return this.request(endpoint, { method: 'DELETE', body: JSON.stringify(body) }); }
+    delete(endpoint: string, body: any) { return this.request(endpoint, { method: 'DELETE', body: JSON.stringify(body) }); },
+
+    async uploadFile(file: File, folder: string) {
+        const token = sessionStorage.getItem('viva_admin_token');
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('folder', folder);
+
+        const response = await fetch(`${API_BASE_URL}/shared/upload_file.php`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+            },
+            body: formData,
+        });
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok || !data?.url) {
+            throw new Error(data?.message || data?.error || 'Dosya yüklenemedi');
+        }
+
+        return data;
+    }
 };

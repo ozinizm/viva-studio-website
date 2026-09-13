@@ -113,7 +113,10 @@ const HeroAdminPage = () => {
     try {
       const res = await fetch('/api/shared/upload_file.php', {
         method: 'POST',
-        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        headers: {
+          'Accept': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: fd,
       });
       const data = await res.json();
@@ -133,6 +136,7 @@ const HeroAdminPage = () => {
       const res = await fetch('/api/settings/update.php', {
         method: 'POST',
         headers: {
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
           ...(sessionStorage.getItem('viva_admin_token') ? { Authorization: `Bearer ${sessionStorage.getItem('viva_admin_token')}` } : {}),
         },

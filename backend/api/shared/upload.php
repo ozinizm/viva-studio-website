@@ -24,11 +24,15 @@ function handleUpload($file, $targetDir, $allowedTypes = ['image/jpeg', 'image/p
     // Auto-create required folders
     $requiredDirs = [
         $siteRoot . '/uploads',
+        $baseDir,
         $siteRoot . '/uploads/logos',
         $siteRoot . '/uploads/favicons',
         $siteRoot . '/uploads/hero',
         $siteRoot . '/uploads/gallery',
+        $siteRoot . '/uploads/gallery_posters',
         $siteRoot . '/uploads/videos',
+        $siteRoot . '/uploads/services',
+        $siteRoot . '/uploads/settings',
         $siteRoot . '/uploads/blog',
         $siteRoot . '/uploads/seo',
         $siteRoot . '/uploads/legal'

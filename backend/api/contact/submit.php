@@ -19,6 +19,7 @@ if (!isset($data['phone']) || empty(trim($data['phone']))) {
 
 try {
     $db = Database::getInstance();
+    Database::ensureUtf8mb4Schema(['contact_requests']);
     $stmt = $db->prepare('
         INSERT INTO contact_requests (name, phone, email, service, message, status) 
         VALUES (?, ?, ?, ?, ?, "new")

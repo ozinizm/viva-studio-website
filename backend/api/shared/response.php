@@ -9,7 +9,7 @@ set_exception_handler(function($e) {
         'success' => false,
         'message' => 'Internal Server Error',
         'error_detail' => defined('APP_DEBUG') && APP_DEBUG ? $e->getMessage() : 'Database or server error occurred.'
-    ]);
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 });
 
@@ -26,11 +26,11 @@ function sendResponse($data, $statusCode = 200) {
     // or we can strictly envelope it. The instruction requested: { "success": true, "data": {...} }
     // We will assume $data is the payload.
     if (is_array($data) && isset($data['success'])) {
-        echo json_encode($data);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     } else {
         // Enveloping will be done directly in the endpoints that need it, 
         // or we return pure data here so we don't break GenericCrudPage which expects an array.
-        echo json_encode($data);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
     exit;
 }
@@ -41,7 +41,7 @@ function sendError($message, $statusCode = 400) {
     echo json_encode([
         'success' => false,
         'message' => $message
-    ]);
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
 
